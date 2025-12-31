@@ -11,8 +11,7 @@ final class Logging: Sendable {
     private let logger: Logger
     private let serviceName: String
 
-    init(name: String) {
-        let uuid = UUID().uuidString
+    nonisolated init(name: String) {
         logger = Logger()
         serviceName = name
     }
@@ -24,12 +23,12 @@ final class Logging: Sendable {
         case error = 3
         case none = 4
 
-        func shouldLog(level: LogLevel) -> Bool {
+        nonisolated func shouldLog(level: LogLevel) -> Bool {
             return self.rawValue <= level.rawValue
         }
     }
 
-    func debug(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+    nonisolated func debug(_ items: Any..., separator: String = " ", terminator: String = "\n") {
         let itemsCopy = items.map { item in
             if let str = item as? String {
                 return str
@@ -42,7 +41,7 @@ final class Logging: Sendable {
         }
     }
 
-    func info(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+    nonisolated func info(_ items: Any..., separator: String = " ", terminator: String = "\n") {
         let itemsCopy = items.map { item in
             if let str = item as? String {
                 return str
@@ -55,7 +54,7 @@ final class Logging: Sendable {
         }
     }
 
-    func error(
+    nonisolated func error(
         _ items: Any..., separator: String = " ", terminator: String = "\n", error: Error? = nil
     ) {
         let itemsCopy = items.map { item in
@@ -77,7 +76,7 @@ final class Logging: Sendable {
         }
     }
 
-    private func log(
+    nonisolated private func log(
         items: [String],
         separator: String = " ",
         terminator: String = "\n",
