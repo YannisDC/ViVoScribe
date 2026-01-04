@@ -17,9 +17,22 @@ actor Transcriber {
     private var isInitialized = false
     private var isTranscribing = false
 
-    // Chunk accumulation buffer (16kHz from AudioInput/ApplicationAudio)
-    private var chunkBuffer: [Float] = []
-    private var chunkStartTime: Date?
+    // Per-source chunk accumulation buffers (16kHz from AudioInput/ApplicationAudio)
+    private struct SourceKey: Hashable {
+        let source: String  // "microphone" or "appAudio-{pid}"
+
+        init(from audioSource: TranscriptionAudioBuffer.AudioSource) {
+            switch audioSource {
+            case .microphone:
+                self.source = "microphone"
+            case .appAudio(let processID):
+                self.source = "appAudio-\(processID)"
+            }
+        }
+    }
+
+    private var chunkBuffers: [SourceKey: [Float]] = [:]
+    private var chunkStartTimes: [SourceKey: Date] = [:]
 
     private var resultHandler: (@Sendable (TranscriptionResult) -> Void)?
 
@@ -29,7 +42,7 @@ actor Transcriber {
             return
         }
 
-        logger.info("🚀 Starting FluidAudio initialization...")
+        logger.info("Starting FluidAudio initialization...")
 
         let maxRetries = 3
         let retryDelay: UInt64 = 15_000_000_000  // 15 seconds in nanoseconds
@@ -111,18 +124,19 @@ actor Transcriber {
 
         logger.info("Stopping transcription")
 
-        // Process any remaining audio in buffer
-        if !chunkBuffer.isEmpty {
-            logger.info("Processing remaining \(chunkBuffer.count) samples")
+        // Process any remaining audio in all source buffers
+        for (sourceKey, buffer) in chunkBuffers where !buffer.isEmpty {
+            logger.info("Processing remaining \(buffer.count) samples from \(sourceKey.source)")
             await processChunk(
-                samples: chunkBuffer,
-                startTime: chunkStartTime ?? Date()
+                samples: buffer,
+                startTime: chunkStartTimes[sourceKey] ?? Date(),
+                sourceIdentifier: sourceKey.source
             )
         }
 
-        // Clear buffers
-        chunkBuffer.removeAll()
-        chunkStartTime = nil
+        // Clear all buffers
+        chunkBuffers.removeAll()
+        chunkStartTimes.removeAll()
 
         // Cleanup ASR manager (keeps models cached)
         logger.info("Cleaning up ASR resources")
@@ -141,10 +155,14 @@ actor Transcriber {
         logger.info("Transcription stopped and resources cleaned up")
     }
 
-    func processAudioChunk(_ buffer: AVAudioPCMBuffer) async throws {
+    func processAudioChunk(_ transcriptionBuffer: TranscriptionAudioBuffer) async throws {
         guard isTranscribing else {
             return
         }
+
+        let buffer = transcriptionBuffer.buffer
+        let audioSource = transcriptionBuffer.source
+        let sourceKey = SourceKey(from: audioSource)
 
         // Buffer is already 16kHz mono from AudioInput/ApplicationAudio
         // Extract samples directly
@@ -156,37 +174,42 @@ actor Transcriber {
         let frameLength = Int(buffer.frameLength)
         let samples = Array(UnsafeBufferPointer(start: channelData[0], count: frameLength))
 
-        // Initialize chunk start time on first buffer
-        if chunkStartTime == nil {
-            chunkStartTime = Date()
+        // Initialize chunk start time for this source on first buffer
+        if chunkStartTimes[sourceKey] == nil {
+            chunkStartTimes[sourceKey] = Date()
         }
 
-        // Accumulate samples (already 16kHz)
-        chunkBuffer.append(contentsOf: samples)
+        // Get or create buffer for this source
+        if chunkBuffers[sourceKey] == nil {
+            chunkBuffers[sourceKey] = []
+        }
 
-        // Process when chunk is full (10 seconds = 160,000 samples)
-        if chunkBuffer.count >= Self.CHUNK_SAMPLES {
-            let chunkToProcess = chunkBuffer
-            let chunkTime = chunkStartTime ?? Date()
+        // Accumulate samples for this specific source (already 16kHz)
+        chunkBuffers[sourceKey]!.append(contentsOf: samples)
+
+        // Process when this source's chunk is full (10 seconds = 160,000 samples)
+        if chunkBuffers[sourceKey]!.count >= Self.CHUNK_SAMPLES {
+            let chunkToProcess = chunkBuffers[sourceKey]!
+            let chunkTime = chunkStartTimes[sourceKey] ?? Date()
 
             // Check if entire chunk is silent
             let chunkMaxAmplitude = chunkToProcess.map { abs($0) }.max() ?? 0.0
             if chunkMaxAmplitude < 0.001 {
-                logger.info("⚠️ ENTIRE CHUNK IS SILENT: \(chunkToProcess.count) samples, max amplitude: \(chunkMaxAmplitude)")
+                logger.info("⚠️ [\(sourceKey.source)] ENTIRE CHUNK IS SILENT: \(chunkToProcess.count) samples, max amplitude: \(chunkMaxAmplitude)")
             } else {
-                logger.info("✅ Chunk ready for processing: \(chunkToProcess.count) samples, max amplitude: \(String(format: "%.4f", chunkMaxAmplitude))")
+                logger.info("✅ [\(sourceKey.source)] Chunk ready for processing: \(chunkToProcess.count) samples, max amplitude: \(String(format: "%.4f", chunkMaxAmplitude))")
             }
 
-            // Reset buffer immediately (prevent concurrent processing)
-            chunkBuffer.removeAll()
-            chunkStartTime = nil
+            // Reset this source's buffer immediately (prevent concurrent processing)
+            chunkBuffers[sourceKey] = []
+            chunkStartTimes[sourceKey] = nil
 
-            // Process chunk (ASR + Diarization)
-            await processChunk(samples: chunkToProcess, startTime: chunkTime)
+            // Process chunk (ASR + Diarization) with source identifier
+            await processChunk(samples: chunkToProcess, startTime: chunkTime, sourceIdentifier: sourceKey.source)
         }
     }
 
-    private func processChunk(samples: [Float], startTime: Date) async {
+    private func processChunk(samples: [Float], startTime: Date, sourceIdentifier: String) async {
         guard let asrManager = asrManager else {
             logger.error("AsrManager not initialized")
             return
@@ -197,10 +220,10 @@ actor Transcriber {
             let maxAmplitude = samples.map { abs($0) }.max() ?? 0.0
             let duration = Float(samples.count) / Self.SAMPLE_RATE
 
-            logger.info("🎤 Transcribing chunk (\(samples.count) samples = \(String(format: "%.1f", duration))s, max amplitude: \(String(format: "%.6f", maxAmplitude)))...")
+            logger.info("🎤 [\(sourceIdentifier)] Transcribing chunk (\(samples.count) samples = \(String(format: "%.1f", duration))s, max amplitude: \(String(format: "%.6f", maxAmplitude)))...")
 
             if maxAmplitude < 0.001 {
-                logger.info("⚠️ AUDIO IS SILENT - Skipping transcription")
+                logger.info("⚠️ [\(sourceIdentifier)] AUDIO IS SILENT - Skipping transcription")
                 return
             }
 
@@ -212,7 +235,7 @@ actor Transcriber {
             )
 
             guard !cleanedText.isEmpty else {
-                logger.info("⚠️ TRANSCRIPTION RETURNED EMPTY (audio had amplitude \(String(format: "%.6f", maxAmplitude))) - ASR failed to detect speech")
+                logger.info("⚠️ [\(sourceIdentifier)] TRANSCRIPTION RETURNED EMPTY (audio had amplitude \(String(format: "%.6f", maxAmplitude))) - ASR failed to detect speech")
                 return
             }
 
@@ -221,7 +244,7 @@ actor Transcriber {
             var speakerLabel: String? = nil
 
             if let diarizerManager = diarizationManager {
-                logger.info("🔊 Diarizing chunk...")
+                logger.info("🔊 [\(sourceIdentifier)] Diarizing chunk...")
 
                 do {
                     let diarizationResult = try diarizerManager.performCompleteDiarization(
@@ -234,15 +257,23 @@ actor Transcriber {
                         speakerID = longestSegment.speakerId
                         speakerLabel = "Speaker \(longestSegment.speakerId)"
                         let duration = longestSegment.endTimeSeconds - longestSegment.startTimeSeconds
-                        logger.info("📍 Longest speaker: \(speakerLabel ?? "Unknown") (\(String(format: "%.1f", duration))s)")
+                        logger.info("📍 [\(sourceIdentifier)] Longest speaker: \(speakerLabel ?? "Unknown") (\(String(format: "%.1f", duration))s)")
+                    } else {
+                        // Diarization succeeded but found no speaker segments
+                        speakerID = "none"
+                        speakerLabel = "No speaker"
+                        logger.info("📍 [\(sourceIdentifier)] No speaker detected in audio chunk")
                     }
                 } catch {
-                    logger.error("Diarization failed: \(error)")
+                    logger.error("[\(sourceIdentifier)] Diarization failed: \(error)")
                     // Continue without speaker info
                 }
             }
 
             // Step 4: Create result with speaker attribution
+            // Parse source type from sourceIdentifier
+            let audioSourceType: AudioSourceType = sourceIdentifier == "microphone" ? .microphone : .appAudio
+
             let result = TranscriptionResult(
                 text: cleanedText,
                 speakerID: speakerID,
@@ -251,15 +282,11 @@ actor Transcriber {
                 startTime: 0.0,
                 endTime: TimeInterval(Self.CHUNK_SECONDS),
                 isPartial: false,
-                audioSource: AudioSourceInfo(
-                    type: .microphone,
-                    identifier: "chunk",
-                    displayName: "Microphone"
-                ),
+                audioSource: audioSourceType,
                 timestamp: startTime
             )
 
-            logger.info("📝 RESULT: \(speakerLabel ?? "Unknown"): \(cleanedText)")
+            logger.info("📝 [\(sourceIdentifier)] RESULT: \(speakerLabel ?? "Unknown"): \(cleanedText)")
 
             // Send to handler
             resultHandler?(result)
@@ -295,8 +322,8 @@ actor Transcriber {
             diarizationManager?.cleanup()
             diarizationManager = nil
             isInitialized = false
-            chunkBuffer.removeAll()
-            chunkStartTime = nil
+            chunkBuffers.removeAll()
+            chunkStartTimes.removeAll()
             logger.info("Transcriber cleaned up")
         }
     }
@@ -352,6 +379,11 @@ enum FluidAudioError: Error, LocalizedError {
 }
 
 // Data models (simplified versions of what would be in TranscriptionResult.swift)
+enum AudioSourceType: Sendable {
+    case microphone
+    case appAudio
+}
+
 struct TranscriptionResult: Sendable {
     let text: String
     let speakerID: String?
@@ -360,7 +392,7 @@ struct TranscriptionResult: Sendable {
     let startTime: TimeInterval
     let endTime: TimeInterval
     let isPartial: Bool
-    let audioSource: AudioSourceInfo
+    let audioSource: AudioSourceType
     let timestamp: Date
 
     nonisolated init(
@@ -371,7 +403,7 @@ struct TranscriptionResult: Sendable {
         startTime: TimeInterval,
         endTime: TimeInterval,
         isPartial: Bool = false,
-        audioSource: AudioSourceInfo,
+        audioSource: AudioSourceType,
         timestamp: Date = Date()
     ) {
         self.text = text
@@ -383,17 +415,5 @@ struct TranscriptionResult: Sendable {
         self.isPartial = isPartial
         self.audioSource = audioSource
         self.timestamp = timestamp
-    }
-}
-
-struct AudioSourceInfo: Sendable {
-    let type: AudioSourceType
-    let identifier: String
-    let displayName: String
-
-    enum AudioSourceType {
-        case microphone
-        case meetingApp
-        case systemAudio
     }
 }
