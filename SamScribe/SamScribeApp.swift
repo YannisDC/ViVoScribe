@@ -1,12 +1,29 @@
 import SwiftUI
+import SwiftData
 import AVFoundation
 
 @main
-struct eApp: App {
+struct SamScribeApp: App {
+    // Add ModelContainer
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Recording.self,
+            TranscriptionSegment.self
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+
     var body: some Scene {
         WindowGroup {
-            RootView()
+            TranscriptionView()
         }
+        .modelContainer(sharedModelContainer)
     }
 }
 
@@ -33,13 +50,15 @@ struct RootView: View {
     @StateObject private var audioManager = AudioManager()
     @State private var transcripts: [TranscriptionResult] = []
     @State private var isRecording = false
+    @State private var isInitializing = false
     @State private var currentTranscript = ""
     @State private var errorMessage: String?
     @State private var permissionStatus: PermissionStatus = .checking
     @State private var showPermissionAlert = false
+    @State private var isMuted = false
 
     private var buttonBackground: Color {
-        if permissionStatus == .checking {
+        if permissionStatus == .checking || isInitializing {
             return Color.gray
         }
         if permissionStatus == .denied {
@@ -49,7 +68,17 @@ struct RootView: View {
     }
 
     private var canInteractWithButton: Bool {
-        return permissionStatus != .checking
+        return permissionStatus != .checking && !isInitializing
+    }
+
+    private var buttonText: String {
+        if isInitializing {
+            return "Starting Recording..."
+        }
+        if isRecording {
+            return "Stop Recording"
+        }
+        return permissionStatus.buttonText
     }
 
     var body: some View {
@@ -92,31 +121,56 @@ struct RootView: View {
                 .padding(.horizontal)
             }
 
-            // Main Action Button
-            Button(action: {
-                Task {
-                    if isRecording {
-                        await stopRecording()
-                    } else {
-                        if permissionStatus == .granted {
-                            await startRecording()
-                        } else if permissionStatus == .notDetermined {
-                            await requestMicrophonePermission()
+            // Main Action Buttons
+            HStack(spacing: 12) {
+                // Recording Button
+                Button(action: {
+                    Task {
+                        if isRecording {
+                            await stopRecording()
                         } else {
-                            showPermissionAlert = true
+                            if permissionStatus == .granted {
+                                await startRecording()
+                            } else if permissionStatus == .notDetermined {
+                                await requestMicrophonePermission()
+                            } else {
+                                showPermissionAlert = true
+                            }
                         }
                     }
-                }
-            }) {
-                Text(isRecording ? "Stop Recording" : permissionStatus.buttonText)
-                    .font(.headline)
-                    .foregroundColor(.white)
+                }) {
+                    HStack {
+                        if isInitializing {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(0.8)
+                        }
+                        Text(buttonText)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                    }
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(buttonBackground)
                     .cornerRadius(10)
+                }
+                .disabled(!canInteractWithButton)
+
+                // Mute Button
+                Button(action: {
+                    Task {
+                        await toggleMute()
+                    }
+                }) {
+                    Image(systemName: isMuted ? "mic.slash.fill" : "mic.fill")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white)
+                        .frame(width: 44, height: 44)
+                        .background(isMuted ? Color.orange : Color.blue)
+                        .cornerRadius(10)
+                }
+                .disabled(!isRecording)
             }
-            .disabled(!canInteractWithButton)
             .padding(.horizontal)
             .alert("Microphone Permission Required", isPresented: $showPermissionAlert) {
                 Button("Open Settings") {
@@ -193,6 +247,9 @@ struct RootView: View {
     }
 
     private func startRecording() async {
+        isInitializing = true
+        defer { isInitializing = false }
+
         do {
             errorMessage = nil
 
@@ -214,9 +271,12 @@ struct RootView: View {
                     // Add to history
                     transcripts.append(result)
 
+                    // Sort by timestamp to ensure chronological order across all sources
+                    transcripts.sort { $0.timestamp < $1.timestamp }
+
                     // Update live transcript
                     let speaker = result.speakerLabel ?? "Unknown"
-                    let source = result.audioSource.type == .microphone ? "🎤" : "🔊"
+                    let source = result.audioSource == .microphone ? "🎤" : "🔊"
                     currentTranscript = "\(source) [\(speaker)] \(result.text)"
 
                     // Keep only last 50 transcripts to avoid memory issues
@@ -227,6 +287,7 @@ struct RootView: View {
             }
 
             isRecording = true
+            isMuted = await audioManager.getMuteState()
         } catch {
             errorMessage = "Failed to start recording: \(error.localizedDescription)"
         }
@@ -236,11 +297,17 @@ struct RootView: View {
         do {
             try await audioManager.stopRecording()
             isRecording = false
+            isMuted = false
             currentTranscript = ""
             errorMessage = nil
         } catch {
             errorMessage = "Failed to stop recording: \(error.localizedDescription)"
         }
+    }
+
+    private func toggleMute() async {
+        await audioManager.toggleMute()
+        isMuted = await audioManager.getMuteState()
     }
 
     private func checkMicrophonePermissionOnLaunch() async {
@@ -314,13 +381,11 @@ struct TranscriptRow: View {
     }
 
     private var sourceIcon: String {
-        switch transcript.audioSource.type {
+        switch transcript.audioSource {
         case .microphone:
             return "🎤"
-        case .meetingApp:
+        case .appAudio:
             return "🔊"
-        case .systemAudio:
-            return "💻"
         }
     }
 }

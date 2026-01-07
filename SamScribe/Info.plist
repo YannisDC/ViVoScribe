@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>SamScribe</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconFile</key>
@@ -24,22 +26,24 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>This app needs access to audio capture to transcribe meeting audio.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs microphone access to capture and transcribe your voice.</string>
 	<key>NSDesktopFolderUsageDescription</key>
-	<string></string>
+	<string>This app may save transcription files to your Desktop folder.</string>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string></string>
+	<string>This app may save transcription files to your Documents folder.</string>
 	<key>NSDownloadsFolderUsageDescription</key>
-	<string></string>
+	<string>This app may save transcription files to your Downloads folder.</string>
 	<key>NSFileProviderDomainUsageDescription</key>
-	<string></string>
+	<string>This app needs access to manage transcription files.</string>
 	<key>NSFileProviderPresenceUsageDescription</key>
-	<string></string>
+	<string>This app needs access to track transcription file changes.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access to capture and transcribe your voice.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSScreenCaptureUsageDescription</key>
+	<string>This app needs screen recording permission to capture audio from meeting applications like Zoom, Teams, and Chrome.</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 </dict>

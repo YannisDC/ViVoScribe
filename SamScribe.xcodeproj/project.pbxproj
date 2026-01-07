@@ -7,21 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D89673DA2F0E5C8E00469222 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C12F0E5C8E00469222 /* Recording.swift */; };
+		D89673DB2F0E5C8E00469222 /* AudioMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C92F0E5C8E00469222 /* AudioMonitor.swift */; };
+		D89673DC2F0E5C8E00469222 /* AudioProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CA2F0E5C8E00469222 /* AudioProcess.swift */; };
+		D89673DD2F0E5C8E00469222 /* TranscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D12F0E5C8E00469222 /* TranscriptionView.swift */; };
+		D89673DE2F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C42F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift */; };
+		D89673DF2F0E5C8E00469222 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */; };
+		D89673E02F0E5C8E00469222 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D02F0E5C8E00469222 /* SidebarView.swift */; };
+		D89673E12F0E5C8E00469222 /* SamScribeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D82F0E5C8E00469222 /* SamScribeApp.swift */; };
+		D89673E22F0E5C8E00469222 /* RecordingControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */; };
+		D89673E32F0E5C8E00469222 /* TranscriptionSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C32F0E5C8E00469222 /* TranscriptionSegment.swift */; };
+		D89673E42F0E5C8E00469222 /* TranscriptSegmentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D22F0E5C8E00469222 /* TranscriptSegmentRow.swift */; };
+		D89673E52F0E5C8E00469222 /* Transcriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CB2F0E5C8E00469222 /* Transcriber.swift */; };
+		D89673E62F0E5C8E00469222 /* ApplicationAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C62F0E5C8E00469222 /* ApplicationAudio.swift */; };
+		D89673E72F0E5C8E00469222 /* RecordingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C22F0E5C8E00469222 /* RecordingViewModel.swift */; };
+		D89673E82F0E5C8E00469222 /* TranscriptionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CC2F0E5C8E00469222 /* TranscriptionsStore.swift */; };
+		D89673E92F0E5C8E00469222 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C82F0E5C8E00469222 /* AudioManager.swift */; };
+		D89673EA2F0E5C8E00469222 /* AudioInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C72F0E5C8E00469222 /* AudioInput.swift */; };
+		D89673EB2F0E5C8E00469222 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D62F0E5C8E00469222 /* Logging.swift */; };
+		D89673EC2F0E5C8E00469222 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D89673D52F0E5C8E00469222 /* Info.plist */; };
+		D89673ED2F0E5C8E00469222 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D89673D42F0E5C8E00469222 /* Assets.xcassets */; };
 		D89DC3992F0369BD00F5628B /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = D89DC3982F0369BD00F5628B /* FluidAudio */; };
 		D89DC39B2F0369BE00F5628B /* FluidAudioTTS in Frameworks */ = {isa = PBXBuildFile; productRef = D89DC39A2F0369BE00F5628B /* FluidAudioTTS */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D89DC3442F03138E00F5628B /* e.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = e.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D89673C12F0E5C8E00469222 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
+		D89673C22F0E5C8E00469222 /* RecordingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingViewModel.swift; sourceTree = "<group>"; };
+		D89673C32F0E5C8E00469222 /* TranscriptionSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionSegment.swift; sourceTree = "<group>"; };
+		D89673C42F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionSegmentViewModel.swift; sourceTree = "<group>"; };
+		D89673C62F0E5C8E00469222 /* ApplicationAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationAudio.swift; sourceTree = "<group>"; };
+		D89673C72F0E5C8E00469222 /* AudioInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInput.swift; sourceTree = "<group>"; };
+		D89673C82F0E5C8E00469222 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		D89673C92F0E5C8E00469222 /* AudioMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMonitor.swift; sourceTree = "<group>"; };
+		D89673CA2F0E5C8E00469222 /* AudioProcess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProcess.swift; sourceTree = "<group>"; };
+		D89673CB2F0E5C8E00469222 /* Transcriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transcriber.swift; sourceTree = "<group>"; };
+		D89673CC2F0E5C8E00469222 /* TranscriptionsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionsStore.swift; sourceTree = "<group>"; };
+		D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingControlsView.swift; sourceTree = "<group>"; };
+		D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
+		D89673D02F0E5C8E00469222 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		D89673D12F0E5C8E00469222 /* TranscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionView.swift; sourceTree = "<group>"; };
+		D89673D22F0E5C8E00469222 /* TranscriptSegmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptSegmentRow.swift; sourceTree = "<group>"; };
+		D89673D42F0E5C8E00469222 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D89673D52F0E5C8E00469222 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D89673D62F0E5C8E00469222 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		D89673D72F0E5C8E00469222 /* SamScribe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SamScribe.entitlements; sourceTree = "<group>"; };
+		D89673D82F0E5C8E00469222 /* SamScribeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamScribeApp.swift; sourceTree = "<group>"; };
+		D89673EE2F0E5C9600469222 /* SamScribe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SamScribe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		D89DC3462F03138E00F5628B /* e */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = e;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D89DC3412F03138E00F5628B /* Frameworks */ = {
@@ -36,28 +69,72 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D89673C52F0E5C8E00469222 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D89673C12F0E5C8E00469222 /* Recording.swift */,
+				D89673C22F0E5C8E00469222 /* RecordingViewModel.swift */,
+				D89673C32F0E5C8E00469222 /* TranscriptionSegment.swift */,
+				D89673C42F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D89673CD2F0E5C8E00469222 /* Transcription */ = {
+			isa = PBXGroup;
+			children = (
+				D89673C62F0E5C8E00469222 /* ApplicationAudio.swift */,
+				D89673C72F0E5C8E00469222 /* AudioInput.swift */,
+				D89673C82F0E5C8E00469222 /* AudioManager.swift */,
+				D89673C92F0E5C8E00469222 /* AudioMonitor.swift */,
+				D89673CA2F0E5C8E00469222 /* AudioProcess.swift */,
+				D89673CB2F0E5C8E00469222 /* Transcriber.swift */,
+				D89673CC2F0E5C8E00469222 /* TranscriptionsStore.swift */,
+			);
+			path = Transcription;
+			sourceTree = "<group>";
+		};
+		D89673D32F0E5C8E00469222 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */,
+				D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */,
+				D89673D02F0E5C8E00469222 /* SidebarView.swift */,
+				D89673D12F0E5C8E00469222 /* TranscriptionView.swift */,
+				D89673D22F0E5C8E00469222 /* TranscriptSegmentRow.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D89673D92F0E5C8E00469222 /* SamScribe */ = {
+			isa = PBXGroup;
+			children = (
+				D89673C52F0E5C8E00469222 /* Models */,
+				D89673CD2F0E5C8E00469222 /* Transcription */,
+				D89673D32F0E5C8E00469222 /* Views */,
+				D89673D42F0E5C8E00469222 /* Assets.xcassets */,
+				D89673D52F0E5C8E00469222 /* Info.plist */,
+				D89673D62F0E5C8E00469222 /* Logging.swift */,
+				D89673D72F0E5C8E00469222 /* SamScribe.entitlements */,
+				D89673D82F0E5C8E00469222 /* SamScribeApp.swift */,
+			);
+			path = SamScribe;
+			sourceTree = "<group>";
+		};
 		D89DC33B2F03138E00F5628B = {
 			isa = PBXGroup;
 			children = (
-				D89DC3462F03138E00F5628B /* e */,
-				D89DC3452F03138E00F5628B /* Products */,
+				D89673D92F0E5C8E00469222 /* SamScribe */,
+				D89673EE2F0E5C9600469222 /* SamScribe.app */,
 			);
-			sourceTree = "<group>";
-		};
-		D89DC3452F03138E00F5628B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D89DC3442F03138E00F5628B /* e.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D89DC3432F03138E00F5628B /* e */ = {
+		D89DC3432F03138E00F5628B /* SamScribe */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D89DC3672F03138F00F5628B /* Build configuration list for PBXNativeTarget "e" */;
+			buildConfigurationList = D89DC3672F03138F00F5628B /* Build configuration list for PBXNativeTarget "SamScribe" */;
 			buildPhases = (
 				D89DC3402F03138E00F5628B /* Sources */,
 				D89DC3412F03138E00F5628B /* Frameworks */,
@@ -67,16 +144,13 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				D89DC3462F03138E00F5628B /* e */,
-			);
-			name = e;
+			name = SamScribe;
 			packageProductDependencies = (
 				D89DC3982F0369BD00F5628B /* FluidAudio */,
 				D89DC39A2F0369BE00F5628B /* FluidAudioTTS */,
 			);
 			productName = e;
-			productReference = D89DC3442F03138E00F5628B /* e.app */;
+			productReference = D89673EE2F0E5C9600469222 /* SamScribe.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -94,7 +168,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D89DC33F2F03138E00F5628B /* Build configuration list for PBXProject "e" */;
+			buildConfigurationList = D89DC33F2F03138E00F5628B /* Build configuration list for PBXProject "SamScribe" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -107,11 +181,11 @@
 				D89DC3972F0369BD00F5628B /* XCRemoteSwiftPackageReference "FluidAudioSwift" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = D89DC3452F03138E00F5628B /* Products */;
+			productRefGroup = D89DC33B2F03138E00F5628B;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D89DC3432F03138E00F5628B /* e */,
+				D89DC3432F03138E00F5628B /* SamScribe */,
 			);
 		};
 /* End PBXProject section */
@@ -121,6 +195,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D89673EC2F0E5C8E00469222 /* Info.plist in Resources */,
+				D89673ED2F0E5C8E00469222 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +207,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D89673DA2F0E5C8E00469222 /* Recording.swift in Sources */,
+				D89673DB2F0E5C8E00469222 /* AudioMonitor.swift in Sources */,
+				D89673DC2F0E5C8E00469222 /* AudioProcess.swift in Sources */,
+				D89673DD2F0E5C8E00469222 /* TranscriptionView.swift in Sources */,
+				D89673DE2F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift in Sources */,
+				D89673DF2F0E5C8E00469222 /* RecordingDetailView.swift in Sources */,
+				D89673E02F0E5C8E00469222 /* SidebarView.swift in Sources */,
+				D89673E12F0E5C8E00469222 /* SamScribeApp.swift in Sources */,
+				D89673E22F0E5C8E00469222 /* RecordingControlsView.swift in Sources */,
+				D89673E32F0E5C8E00469222 /* TranscriptionSegment.swift in Sources */,
+				D89673E42F0E5C8E00469222 /* TranscriptSegmentRow.swift in Sources */,
+				D89673E52F0E5C8E00469222 /* Transcriber.swift in Sources */,
+				D89673E62F0E5C8E00469222 /* ApplicationAudio.swift in Sources */,
+				D89673E72F0E5C8E00469222 /* RecordingViewModel.swift in Sources */,
+				D89673E82F0E5C8E00469222 /* TranscriptionsStore.swift in Sources */,
+				D89673E92F0E5C8E00469222 /* AudioManager.swift in Sources */,
+				D89673EA2F0E5C8E00469222 /* AudioInput.swift in Sources */,
+				D89673EB2F0E5C8E00469222 /* Logging.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,7 +355,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				AUTOMATION_APPLE_EVENTS = NO;
-				CODE_SIGN_ENTITLEMENTS = e/e.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SamScribe/SamScribe.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -284,14 +378,14 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = e/Info.plist;
+				INFOPLIST_FILE = SamScribe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.e.transcription;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SamScribe.transcription;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -315,7 +409,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				AUTOMATION_APPLE_EVENTS = NO;
-				CODE_SIGN_ENTITLEMENTS = e/e.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SamScribe/SamScribe.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -338,14 +432,14 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = e/Info.plist;
+				INFOPLIST_FILE = SamScribe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.e.transcription;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SamScribe.transcription;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -366,7 +460,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D89DC33F2F03138E00F5628B /* Build configuration list for PBXProject "e" */ = {
+		D89DC33F2F03138E00F5628B /* Build configuration list for PBXProject "SamScribe" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D89DC3652F03138F00F5628B /* Debug */,
@@ -375,7 +469,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D89DC3672F03138F00F5628B /* Build configuration list for PBXNativeTarget "e" */ = {
+		D89DC3672F03138F00F5628B /* Build configuration list for PBXNativeTarget "SamScribe" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D89DC3682F03138F00F5628B /* Debug */,

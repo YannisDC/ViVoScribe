@@ -15,6 +15,10 @@ final class AudioMonitor {
     private var gracePeriodTasks: [pid_t: Task<Void, Never>] = [:]
     private let gracePeriodDuration: TimeInterval = 5.0
 
+    // Start delay to prevent short audio spikes from creating streams
+    private var pendingStartTasks: [pid_t: Task<Void, Never>] = [:]
+    private let startDelayDuration: TimeInterval = 3.0
+
     // Monitoring
     private var monitoringTask: Task<Void, Never>?
     private let checkInterval: TimeInterval = 2.0 // Check every 2 seconds
@@ -78,16 +82,43 @@ final class AudioMonitor {
                             graceTask.cancel()
                             gracePeriodTasks[pid] = nil
                             logger.info("   ✅ Process \(process.name) (PID: \(pid)) reappeared - grace period cancelled")
-                        } else {
-                            logger.info("   ▶️ Process started: \(process.name) (PID: \(pid))")
                         }
-                        await onProcessStarted?(process)
+
+                        // Cancel any existing pending start task
+                        pendingStartTasks[pid]?.cancel()
+
+                        // Start 3-second delay before creating stream
+                        logger.info("   🕐 Process started: \(process.name) (PID: \(pid)) - waiting 3s to confirm sustained audio")
+
+                        let startTask = Task { [weak self] in
+                            do {
+                                try await Task.sleep(for: .seconds(3.0))
+
+                                // 3 seconds passed - notify that stream should be created
+                                self?.logger.info("   ✅ 3-second delay complete for \(process.name) (PID: \(pid)) - creating stream")
+                                await self?.onProcessStarted?(process)
+                                self?.pendingStartTasks[pid] = nil
+                            } catch {
+                                // Task was cancelled - audio stopped before 3 seconds
+                                self?.logger.info("   ❌ Process \(process.name) (PID: \(pid)) audio stopped before 3s - stream not created")
+                            }
+                        }
+
+                        pendingStartTasks[pid] = startTask
                     }
                 }
 
                 // Detect stopped processes - start grace period
                 let stoppedPIDs = previousPIDs.subtracting(currentPIDs)
                 for pid in stoppedPIDs {
+                    // Cancel pending start task if audio stopped before 3 seconds
+                    if let pendingTask = pendingStartTasks[pid] {
+                        pendingTask.cancel()
+                        pendingStartTasks[pid] = nil
+                        logger.info("   ⏸️ Process PID \(pid) stopped before 3s delay - pending stream creation cancelled")
+                        continue // Don't start grace period since stream was never created
+                    }
+
                     logger.info("   ⏸️ Process stopped: PID \(pid) - starting 5s grace period")
 
                     // Cancel existing grace task if any
