@@ -6,8 +6,8 @@ import FluidAudio
 final class Speaker {
     var id: UUID
     var customName: String?  // User-provided name (optional)
-    var speakerNumber: Int   // Auto-assigned: 1, 2, 3... (0 for unknown)
-    var embeddingData: Data  // SpeakerManager.embeddingSize (256) floats = 1024 bytes
+    var speakerNumber: Int   // Auto-assigned
+    var embeddingData: Data 
     var createdAt: Date
     var updatedAt: Date
 
@@ -16,7 +16,7 @@ final class Speaker {
 
     var displayName: String {
         if speakerNumber == 0 {
-            return customName ?? "Unknown Speaker"  // Handle "No speaker" case
+            return customName ?? "Unknown Speaker" 
         }
         return customName ?? "Speaker \(speakerNumber)"
     }

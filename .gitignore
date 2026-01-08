@@ -1,6 +1,3 @@
-# Ignore the Audio reference folder (will be deleted)
-Audio/
-
 # Xcode
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
@@ -58,19 +55,14 @@ Temporary Items
 
 # Swift Package Manager
 .build/
-Package.resolved
 *.swiftpm
 
 # FluidAudio models cache
 *.mlmodelc
 .fluid_models/
 
-# Transcription files
+# Transcription files (user-generated output)
 transcriptions/
-*.txt
-*.json
-*.csv
-*.srt
 
 # User-specific Xcode settings
 *.xcuserstate
@@ -91,3 +83,16 @@ project.xcworkspace/xcuserdata/
 .env.local
 secrets.plist
 config.plist
+
+# SwiftData database (user data)
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+default.store
+
+# IDEs (for contributors using different editors)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

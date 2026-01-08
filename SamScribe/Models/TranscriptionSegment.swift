@@ -4,12 +4,11 @@ import SwiftData
 @Model
 final class TranscriptionSegment {
     var id: UUID
-    var text: String  // Mutable for editing
-    var speakerID: String?  // DEPRECATED: Keep for migration
+    var text: String
     @Transient var speakerLabel: String? {  // COMPUTED: Get from speaker relationship
         speaker?.displayName
     }
-    var embeddingData: Data?  // NEW: Store segment's embedding (256 floats = 1024 bytes)
+    var embeddingData: Data?  // Store segment's embedding (256 floats = 1024 bytes)
     var confidence: Float
     var startTime: TimeInterval
     var endTime: TimeInterval
@@ -19,13 +18,12 @@ final class TranscriptionSegment {
 
     // Relationships
     var recording: Recording?
-    var speaker: Speaker?  // NEW: Relationship to Speaker entity
+    var speaker: Speaker?  // Relationship to Speaker entity
 
     init(
         id: UUID = UUID(),
         text: String,
-        speakerID: String? = nil,  // DEPRECATED
-        embeddingData: Data? = nil,  // NEW
+        embeddingData: Data? = nil,
         confidence: Float,
         startTime: TimeInterval,
         endTime: TimeInterval,
@@ -35,7 +33,6 @@ final class TranscriptionSegment {
     ) {
         self.id = id
         self.text = text
-        self.speakerID = speakerID
         self.embeddingData = embeddingData
         self.confidence = confidence
         self.startTime = startTime
@@ -57,8 +54,7 @@ final class TranscriptionSegment {
 
         self.init(
             text: result.text,
-            speakerID: result.speakerID,  // DEPRECATED: Keep for now
-            embeddingData: embeddingData,  // NEW: Store embedding
+            embeddingData: embeddingData,
             confidence: result.confidence,
             startTime: result.startTime,
             endTime: result.endTime,

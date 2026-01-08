@@ -244,7 +244,7 @@ actor ApplicationAudio {
         } while retryCount < 3 && lastError != nil
 
         if let error = lastError {
-            logger.error("[\(processID)] Failed to start capture after 3 attempts")
+            logger.error("[\(processID)] Failed to start capture after 3 attempts: \(error)")
             throw TranscriptionError.audioFormatNotSupported
         }
 

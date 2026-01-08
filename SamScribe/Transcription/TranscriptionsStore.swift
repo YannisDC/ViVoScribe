@@ -163,7 +163,9 @@ final class TranscriptionsStore {
         }
 
         autoSaveTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { [weak self] _ in
-            self?.saveCurrentRecording()
+            Task { @MainActor [weak self] in
+                self?.saveCurrentRecording()
+            }
         }
         logger.info("Started 30-second auto-save timer")
     }
