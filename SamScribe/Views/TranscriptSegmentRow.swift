@@ -7,6 +7,7 @@ struct TranscriptSegmentRow: View {
     let onSave: (String) -> Void
     let onCancel: () -> Void
     let onDelete: () -> Void
+    let onEditSpeaker: () -> Void
 
     @State private var editedText: String = ""
 
@@ -16,14 +17,30 @@ struct TranscriptSegmentRow: View {
                 // Metadata
                 HStack(spacing: 8) {
                     if let speakerLabel = segment.speakerLabel {
-                        Text(speakerLabel)
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(.primary)
+                        // Has speaker - show with edit button
+                        Button(action: onEditSpeaker) {
+                            HStack(spacing: 6) {
+                                Text(speakerLabel)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+
+                                Image(systemName: "pencil")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        // No speaker - just show label without edit button
+                        Text("No Speaker")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.secondary)
                     }
 
                     Text(segment.timestamp.formatted(date: .omitted, time: .standard))
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
 

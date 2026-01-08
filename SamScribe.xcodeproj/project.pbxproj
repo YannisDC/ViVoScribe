@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */; };
+		D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029B2F0F0DEC007C5609 /* Speaker.swift */; };
+		D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */; };
 		D89673DA2F0E5C8E00469222 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C12F0E5C8E00469222 /* Recording.swift */; };
 		D89673DB2F0E5C8E00469222 /* AudioMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C92F0E5C8E00469222 /* AudioMonitor.swift */; };
 		D89673DC2F0E5C8E00469222 /* AudioProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CA2F0E5C8E00469222 /* AudioProcess.swift */; };
@@ -32,6 +35,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpeakerSheet.swift; sourceTree = "<group>"; };
+		D81E029B2F0F0DEC007C5609 /* Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speaker.swift; sourceTree = "<group>"; };
+		D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerManager.swift; sourceTree = "<group>"; };
 		D89673C12F0E5C8E00469222 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
 		D89673C22F0E5C8E00469222 /* RecordingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingViewModel.swift; sourceTree = "<group>"; };
 		D89673C32F0E5C8E00469222 /* TranscriptionSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionSegment.swift; sourceTree = "<group>"; };
@@ -72,6 +78,7 @@
 		D89673C52F0E5C8E00469222 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D81E029B2F0F0DEC007C5609 /* Speaker.swift */,
 				D89673C12F0E5C8E00469222 /* Recording.swift */,
 				D89673C22F0E5C8E00469222 /* RecordingViewModel.swift */,
 				D89673C32F0E5C8E00469222 /* TranscriptionSegment.swift */,
@@ -83,6 +90,7 @@
 		D89673CD2F0E5C8E00469222 /* Transcription */ = {
 			isa = PBXGroup;
 			children = (
+				D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */,
 				D89673C62F0E5C8E00469222 /* ApplicationAudio.swift */,
 				D89673C72F0E5C8E00469222 /* AudioInput.swift */,
 				D89673C82F0E5C8E00469222 /* AudioManager.swift */,
@@ -97,6 +105,7 @@
 		D89673D32F0E5C8E00469222 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */,
 				D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */,
 				D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */,
 				D89673D02F0E5C8E00469222 /* SidebarView.swift */,
@@ -209,13 +218,16 @@
 			files = (
 				D89673DA2F0E5C8E00469222 /* Recording.swift in Sources */,
 				D89673DB2F0E5C8E00469222 /* AudioMonitor.swift in Sources */,
+				D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */,
 				D89673DC2F0E5C8E00469222 /* AudioProcess.swift in Sources */,
 				D89673DD2F0E5C8E00469222 /* TranscriptionView.swift in Sources */,
 				D89673DE2F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift in Sources */,
 				D89673DF2F0E5C8E00469222 /* RecordingDetailView.swift in Sources */,
+				D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */,
 				D89673E02F0E5C8E00469222 /* SidebarView.swift in Sources */,
 				D89673E12F0E5C8E00469222 /* SamScribeApp.swift in Sources */,
 				D89673E22F0E5C8E00469222 /* RecordingControlsView.swift in Sources */,
+				D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */,
 				D89673E32F0E5C8E00469222 /* TranscriptionSegment.swift in Sources */,
 				D89673E42F0E5C8E00469222 /* TranscriptSegmentRow.swift in Sources */,
 				D89673E52F0E5C8E00469222 /* Transcriber.swift in Sources */,

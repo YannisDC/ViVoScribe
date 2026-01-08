@@ -5,8 +5,11 @@ import SwiftData
 final class TranscriptionSegment {
     var id: UUID
     var text: String  // Mutable for editing
-    var speakerID: String?
-    var speakerLabel: String?
+    var speakerID: String?  // DEPRECATED: Keep for migration
+    @Transient var speakerLabel: String? {  // COMPUTED: Get from speaker relationship
+        speaker?.displayName
+    }
+    var embeddingData: Data?  // NEW: Store segment's embedding (256 floats = 1024 bytes)
     var confidence: Float
     var startTime: TimeInterval
     var endTime: TimeInterval
@@ -14,14 +17,15 @@ final class TranscriptionSegment {
     var audioSourceType: String  // "microphone" or "appAudio"
     var timestamp: Date
 
-    // Relationship to parent recording
+    // Relationships
     var recording: Recording?
+    var speaker: Speaker?  // NEW: Relationship to Speaker entity
 
     init(
         id: UUID = UUID(),
         text: String,
-        speakerID: String? = nil,
-        speakerLabel: String? = nil,
+        speakerID: String? = nil,  // DEPRECATED
+        embeddingData: Data? = nil,  // NEW
         confidence: Float,
         startTime: TimeInterval,
         endTime: TimeInterval,
@@ -32,7 +36,7 @@ final class TranscriptionSegment {
         self.id = id
         self.text = text
         self.speakerID = speakerID
-        self.speakerLabel = speakerLabel
+        self.embeddingData = embeddingData
         self.confidence = confidence
         self.startTime = startTime
         self.endTime = endTime
@@ -48,10 +52,13 @@ final class TranscriptionSegment {
         case .appAudio: "appAudio"
         }
 
+        // Convert embedding to Data if present
+        let embeddingData = result.embedding.map { Speaker.createEmbeddingData(from: $0) }
+
         self.init(
             text: result.text,
-            speakerID: result.speakerID,
-            speakerLabel: result.speakerLabel,
+            speakerID: result.speakerID,  // DEPRECATED: Keep for now
+            embeddingData: embeddingData,  // NEW: Store embedding
             confidence: result.confidence,
             startTime: result.startTime,
             endTime: result.endTime,

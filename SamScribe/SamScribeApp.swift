@@ -8,7 +8,8 @@ struct SamScribeApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Recording.self,
-            TranscriptionSegment.self
+            TranscriptionSegment.self,
+            Speaker.self  // NEW: Add Speaker model
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

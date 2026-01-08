@@ -109,6 +109,11 @@ struct RecordingListRow: View {
     @Bindable var store: TranscriptionsStore
     @State private var isRenaming = false
     @State private var newTitle = ""
+    @State private var elapsedTime: TimeInterval = 0
+
+    private var isActiveRecording: Bool {
+        recording.id == store.currentRecording?.id
+    }
 
     var body: some View {
         HStack {
@@ -138,7 +143,7 @@ struct RecordingListRow: View {
                             .font(.caption2)
                             .foregroundColor(.secondary)
 
-                        Text(recording.formattedDuration)
+                        Text(displayDuration)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -158,6 +163,39 @@ struct RecordingListRow: View {
                 }
             } label: {
                 Label("Delete", systemImage: "trash")
+            }
+        }
+        .onAppear {
+            if isActiveRecording {
+                startTimer()
+            }
+        }
+        .onChange(of: isActiveRecording) { oldValue, newValue in
+            if newValue {
+                startTimer()
+            }
+        }
+    }
+
+    private var displayDuration: String {
+        let duration = isActiveRecording ? elapsedTime : recording.duration
+        let hours = Int(duration) / 3600
+        let minutes = (Int(duration) % 3600) / 60
+        let seconds = Int(duration) % 60
+
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%d:%02d", minutes, seconds)
+        }
+    }
+
+    private func startTimer() {
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            if isActiveRecording {
+                elapsedTime = Date().timeIntervalSince(recording.startDate)
+            } else {
+                timer.invalidate()
             }
         }
     }

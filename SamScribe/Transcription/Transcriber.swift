@@ -66,9 +66,9 @@ actor Transcriber {
                 logger.info("📥 Loading diarization models...")
 
                 let diarizationConfig = DiarizerConfig(
-                    clusteringThreshold: 0.4,
-                    minSpeechDuration: 0.2,
-                    minSilenceGap: 0.1,
+                    clusteringThreshold: 0.5,
+                    minSpeechDuration: 0.5,
+                    minSilenceGap: 0.2,
                     debugMode: false
                 )
 
@@ -242,6 +242,7 @@ actor Transcriber {
             // Step 2: Diarize chunk
             var speakerID: String? = nil
             var speakerLabel: String? = nil
+            var speakerEmbedding: [Float]? = nil  // NEW: Extract embedding
 
             if let diarizerManager = diarizationManager {
                 logger.info("🔊 [\(sourceIdentifier)] Diarizing chunk...")
@@ -256,6 +257,7 @@ actor Transcriber {
                     if let longestSegment = findLongestSpeaker(from: diarizationResult) {
                         speakerID = longestSegment.speakerId
                         speakerLabel = "Speaker \(longestSegment.speakerId)"
+                        speakerEmbedding = longestSegment.embedding  // NEW: Extract embedding
                         let duration = longestSegment.endTimeSeconds - longestSegment.startTimeSeconds
                         logger.info("📍 [\(sourceIdentifier)] Longest speaker: \(speakerLabel ?? "Unknown") (\(String(format: "%.1f", duration))s)")
                     } else {
@@ -270,7 +272,7 @@ actor Transcriber {
                 }
             }
 
-            // Step 4: Create result with speaker attribution
+            // Step 4: Create result with speaker attribution and embedding
             // Parse source type from sourceIdentifier
             let audioSourceType: AudioSourceType = sourceIdentifier == "microphone" ? .microphone : .appAudio
 
@@ -278,6 +280,7 @@ actor Transcriber {
                 text: cleanedText,
                 speakerID: speakerID,
                 speakerLabel: speakerLabel,
+                embedding: speakerEmbedding,  // NEW: Include embedding
                 confidence: asrResult.confidence,
                 startTime: 0.0,
                 endTime: TimeInterval(Self.CHUNK_SECONDS),
@@ -388,6 +391,7 @@ struct TranscriptionResult: Sendable {
     let text: String
     let speakerID: String?
     let speakerLabel: String?
+    let embedding: [Float]?  // NEW: Add embedding field
     let confidence: Float
     let startTime: TimeInterval
     let endTime: TimeInterval
@@ -399,6 +403,7 @@ struct TranscriptionResult: Sendable {
         text: String,
         speakerID: String? = nil,
         speakerLabel: String? = nil,
+        embedding: [Float]? = nil,  // NEW
         confidence: Float,
         startTime: TimeInterval,
         endTime: TimeInterval,
@@ -409,6 +414,7 @@ struct TranscriptionResult: Sendable {
         self.text = text
         self.speakerID = speakerID
         self.speakerLabel = speakerLabel
+        self.embedding = embedding  // NEW
         self.confidence = confidence
         self.startTime = startTime
         self.endTime = endTime

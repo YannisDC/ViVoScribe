@@ -7,6 +7,7 @@ import SwiftUI
 final class TranscriptionsStore {
     private let logger = Logging(name: "TranscriptionsStore")
     private var modelContext: ModelContext?
+    private var speakerManager: SpeakerManager?  // NEW: Add SpeakerManager
 
     // Cached data
     var recordings: [RecordingViewModel] = []
@@ -24,6 +25,7 @@ final class TranscriptionsStore {
 
     func initialize(with context: ModelContext) {
         self.modelContext = context
+        self.speakerManager = SpeakerManager(modelContext: context)  // NEW: Initialize SpeakerManager
         Task { @MainActor in
             await refreshData()
         }
@@ -105,13 +107,25 @@ final class TranscriptionsStore {
     // MARK: - Transcription Integration
 
     func addTranscriptionSegment(_ result: TranscriptionResult) {
-        guard let recording = currentRecording else {
-            logger.error("No current recording to add segment to")
+        guard let recording = currentRecording,
+              let speakerManager = speakerManager else {
+            logger.error("No current recording or speaker manager")
             return
         }
 
+        // NEW: Speaker matching logic
+        var assignedSpeaker: Speaker? = nil
+        if let embedding = result.embedding {
+            assignedSpeaker = speakerManager.assignSpeaker(
+                embedding: embedding,
+                segmentDuration: Float(result.endTime - result.startTime)
+            )
+        }
+
+        // Create segment with embedding data
         let segment = TranscriptionSegment(from: result)
         segment.recording = recording
+        segment.speaker = assignedSpeaker  // NEW: Link to speaker
         recording.segments.append(segment)
 
         // Update UI in real-time if this is the selected recording
@@ -310,6 +324,13 @@ final class TranscriptionsStore {
         } catch {
             logger.error("Failed to delete segment: \(error.localizedDescription)")
         }
+    }
+
+    // NEW: Speaker rename method
+    func renameSpeaker(_ speaker: Speaker, newName: String) {
+        guard let speakerManager = speakerManager else { return }
+        speakerManager.renameSpeaker(speaker, newName: newName)
+        refreshSelectedRecording()  // Refresh to show updated names
     }
 
 }
