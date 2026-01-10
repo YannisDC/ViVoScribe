@@ -1,6 +1,6 @@
-# SamScribe - AI-Powered Local Transcription App
+## SamScribe - AI-Powered Local Transcription App
 
-## Overview
+### Overview
 
 An open-source macOS app that captures and transcribes audio from your microphone and meeting applications (Zoom, Teams, Chrome) in real-time, with cross-session speaker recognition.
 
@@ -8,9 +8,9 @@ Uses voice embeddings to remember speakers across sessions - name someone "Bob" 
 
 Built with Swift, SwiftUI, and [FluidAudio](https://github.com/FluidInference/FluidAudio). All data stays local on your Mac.
 
-<p align="center">
+<div align="center">
   <img src="docs/demo.gif" alt="SamScribe Demo" width="800">
-</p>
+</div>
 
 ---
 
