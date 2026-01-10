@@ -4,7 +4,6 @@ struct RecordingDetailView: View {
     @Bindable var store: TranscriptionsStore
     @State private var editingSegmentID: UUID?
     @State private var editingSpeaker: Speaker?
-    @State private var showSpeakerSheet = false
 
     var body: some View {
         ScrollView {
@@ -25,7 +24,6 @@ struct RecordingDetailView: View {
                             },
                             onEditSpeaker: {
                                 editingSpeaker = segment.speaker
-                                showSpeakerSheet = true
                             }
                         )
                     }
@@ -33,17 +31,15 @@ struct RecordingDetailView: View {
                 .padding(20)
             }
         }
-        .sheet(isPresented: $showSpeakerSheet) {
-            if let speaker = editingSpeaker {
-                EditSpeakerSheet(
-                    speaker: speaker,
-                    onSave: { newName in
-                        store.renameSpeaker(speaker, newName: newName)
-                        showSpeakerSheet = false
-                    },
-                    onCancel: { showSpeakerSheet = false }
-                )
-            }
+        .sheet(item: $editingSpeaker) { speaker in
+            EditSpeakerSheet(
+                speaker: speaker,
+                onSave: { newName in
+                    store.renameSpeaker(speaker, newName: newName)
+                    editingSpeaker = nil
+                },
+                onCancel: { editingSpeaker = nil }
+            )
         }
     }
 }

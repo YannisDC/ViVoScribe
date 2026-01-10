@@ -8,6 +8,10 @@ Uses voice embeddings to remember speakers across sessions - name someone "Bob" 
 
 Built with Swift, SwiftUI, and [FluidAudio](https://github.com/FluidInference/FluidAudio). All data stays local on your Mac.
 
+<p align="center">
+  <img src="docs/demo.gif" alt="SamScribe Demo" width="800">
+</p>
+
 ---
 
 ## Features
