@@ -29,37 +29,72 @@ struct RecordingDetailView: View {
                 ScrollView {
                     if let recording = store.selectedRecording {
                         LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(filteredSegments(recording.segments)) { segment in
-                                TranscriptSegmentView(
-                                    segment: segment,
-                                    fontSize: fontSize,
-                                    showTimestamps: showTimestamps,
-                                    isEditing: editingSegmentID == segment.id,
-                                    onEdit: { editingSegmentID = segment.id },
-                                    onSave: { newText in
-                                        store.updateSegmentText(segment.id, newText: newText)
-                                        editingSegmentID = nil
-                                    },
-                                    onCancel: { editingSegmentID = nil },
-                                    onDelete: {
-                                        store.deleteSegment(segment.id)
-                                    },
-                                    onEditSpeaker: {
-                                        editingSpeaker = segment.speaker
-                                    },
-                                    onSeekToSegment: {
-                                        if let recording = store.selectedRecording,
-                                           let audioFileURL = resolvedAudioFileURL {
-                                            audioPlayerViewModel.playFromSegment(
-                                                startTime: segment.startTime,
-                                                endTime: segment.endTime,
-                                                segmentTimestamp: segment.timestamp,
-                                                recordingStartDate: recording.startDate,
-                                                segmentID: segment.id
-                                            )
+                            if speakerGroupingEnabled {
+                                ForEach(groupSegmentsIntoBlocks(filteredSegments(recording.segments))) { block in
+                                    TranscriptBlockView(
+                                        block: block,
+                                        fontSize: fontSize,
+                                        showTimestamps: showTimestamps,
+                                        editingSegmentID: editingSegmentID,
+                                        onEdit: { segmentID in editingSegmentID = segmentID },
+                                        onSave: { segmentID, newText in
+                                            store.updateSegmentText(segmentID, newText: newText)
+                                            editingSegmentID = nil
+                                        },
+                                        onCancel: { editingSegmentID = nil },
+                                        onDelete: { segmentID in
+                                            store.deleteSegment(segmentID)
+                                        },
+                                        onEditSpeaker: {
+                                            editingSpeaker = block.speaker
+                                        },
+                                        onSeekToSegment: { segment in
+                                            if let recording = store.selectedRecording,
+                                               let audioFileURL = resolvedAudioFileURL {
+                                                audioPlayerViewModel.playFromSegment(
+                                                    startTime: segment.startTime,
+                                                    endTime: segment.endTime,
+                                                    segmentTimestamp: segment.timestamp,
+                                                    recordingStartDate: recording.startDate,
+                                                    segmentID: segment.id
+                                                )
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
+                            } else {
+                                ForEach(filteredSegments(recording.segments)) { segment in
+                                    TranscriptSegmentView(
+                                        segment: segment,
+                                        fontSize: fontSize,
+                                        showTimestamps: showTimestamps,
+                                        isEditing: editingSegmentID == segment.id,
+                                        onEdit: { editingSegmentID = segment.id },
+                                        onSave: { newText in
+                                            store.updateSegmentText(segment.id, newText: newText)
+                                            editingSegmentID = nil
+                                        },
+                                        onCancel: { editingSegmentID = nil },
+                                        onDelete: {
+                                            store.deleteSegment(segment.id)
+                                        },
+                                        onEditSpeaker: {
+                                            editingSpeaker = segment.speaker
+                                        },
+                                        onSeekToSegment: {
+                                            if let recording = store.selectedRecording,
+                                               let audioFileURL = resolvedAudioFileURL {
+                                                audioPlayerViewModel.playFromSegment(
+                                                    startTime: segment.startTime,
+                                                    endTime: segment.endTime,
+                                                    segmentTimestamp: segment.timestamp,
+                                                    recordingStartDate: recording.startDate,
+                                                    segmentID: segment.id
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
                             }
                         }
                         .padding(20)
@@ -392,6 +427,41 @@ struct RecordingDetailView: View {
         return filtered
     }
     
+    private func groupSegmentsIntoBlocks(_ segments: [TranscriptionSegmentViewModel]) -> [TranscriptionBlock] {
+        guard !segments.isEmpty else { return [] }
+        
+        var blocks: [TranscriptionBlock] = []
+        var currentBlockSegments: [TranscriptionSegmentViewModel] = []
+        
+        for segment in segments {
+            if currentBlockSegments.isEmpty {
+                // Start a new block
+                currentBlockSegments.append(segment)
+            } else {
+                // Check if this segment can be grouped with the current block
+                let lastSegment = currentBlockSegments.last!
+                let canGroup = (lastSegment.speaker?.id == segment.speaker?.id) && 
+                               (lastSegment.speaker != nil || segment.speaker == nil)
+                
+                if canGroup {
+                    // Add to current block
+                    currentBlockSegments.append(segment)
+                } else {
+                    // Finalize current block and start a new one
+                    blocks.append(TranscriptionBlock(segments: currentBlockSegments))
+                    currentBlockSegments = [segment]
+                }
+            }
+        }
+        
+        // Don't forget the last block
+        if !currentBlockSegments.isEmpty {
+            blocks.append(TranscriptionBlock(segments: currentBlockSegments))
+        }
+        
+        return blocks
+    }
+    
     private func getUniqueSpeakers(from segments: [TranscriptionSegmentViewModel]) -> [Speaker] {
         var speakers: [Speaker] = []
         var seenIDs: Set<UUID> = []
@@ -544,6 +614,148 @@ struct TranscriptSegmentView: View {
                         onDelete()
                     } label: {
                         Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 8)
+    }
+    
+    private func colorForSpeaker(_ speaker: Speaker) -> Color {
+        let colors: [Color] = [.red, .blue, .green, .purple, .orange, .pink, .cyan, .mint, .indigo, .yellow]
+        let index = abs(speaker.id.hashValue) % colors.count
+        return colors[index]
+    }
+}
+
+// MARK: - Transcript Block View
+
+struct TranscriptBlockView: View {
+    let block: TranscriptionBlock
+    let fontSize: Int
+    let showTimestamps: Bool
+    let editingSegmentID: UUID?
+    let onEdit: (UUID) -> Void
+    let onSave: (UUID, String) -> Void
+    let onCancel: () -> Void
+    let onDelete: (UUID) -> Void
+    let onEditSpeaker: () -> Void
+    let onSeekToSegment: (TranscriptionSegmentViewModel) -> Void
+    
+    @State private var editedText: String = ""
+    @FocusState private var isFocused: Bool
+    
+    var editingSegment: TranscriptionSegmentViewModel? {
+        guard let editingSegmentID = editingSegmentID else { return nil }
+        return block.segments.first { $0.id == editingSegmentID }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            // Speaker name
+            if let speaker = block.speaker {
+                Button(action: onEditSpeaker) {
+                    Text(speaker.displayName)
+                        .font(.system(size: CGFloat(fontSize), weight: .semibold))
+                        .foregroundColor(colorForSpeaker(speaker))
+                }
+                .buttonStyle(.plain)
+            } else {
+                Text("No Speaker")
+                    .font(.system(size: CGFloat(fontSize), weight: .semibold))
+                    .foregroundColor(.secondary)
+            }
+            
+            // Timestamps
+            if showTimestamps {
+                HStack(spacing: 4) {
+                    Text(block.startTimestamp.formatted(date: .omitted, time: .standard))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("–")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(block.endTimestamp.formatted(date: .omitted, time: .standard))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            // Show editing UI if a segment is being edited, otherwise show combined text
+            if let editingSegment = editingSegment {
+                // Editing mode for a specific segment
+                TextEditor(text: $editedText)
+                    .font(.system(size: CGFloat(fontSize)))
+                    .frame(minHeight: 60)
+                    .focused($isFocused)
+                    .onAppear {
+                        editedText = editingSegment.text
+                        isFocused = true
+                    }
+                
+                HStack {
+                    Button("Save") {
+                        onSave(editingSegment.id, editedText)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Cancel") {
+                        onCancel()
+                    }
+                    .buttonStyle(.bordered)
+                }
+            } else {
+                // Normal display mode - show combined text
+                HStack(alignment: .top, spacing: 8) {
+                    Button(action: {
+                        if let firstSegment = block.segments.first {
+                            onSeekToSegment(firstSegment)
+                        }
+                    }) {
+                        Image(systemName: "play.circle")
+                            .font(.caption)
+                            .foregroundColor(.accentColor)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Play from block start")
+                    
+                    Text(block.combinedText)
+                        .font(.system(size: CGFloat(fontSize)))
+                        .textSelection(.enabled)
+                }
+                .contextMenu {
+                    if let firstSegment = block.segments.first {
+                        Button {
+                            onSeekToSegment(firstSegment)
+                        } label: {
+                            Label("Play from here", systemImage: "play")
+                        }
+                    }
+                    
+                    Button {
+                        onEditSpeaker()
+                    } label: {
+                        Label("Edit Speaker", systemImage: "person")
+                    }
+                    
+                    Menu("Edit Segments") {
+                        ForEach(block.segments) { segment in
+                            Button {
+                                onEdit(segment.id)
+                            } label: {
+                                Text(segment.text.prefix(50) + (segment.text.count > 50 ? "..." : ""))
+                            }
+                        }
+                    }
+                    
+                    Menu("Delete Segments") {
+                        ForEach(block.segments) { segment in
+                            Button(role: .destructive) {
+                                onDelete(segment.id)
+                            } label: {
+                                Text(segment.text.prefix(50) + (segment.text.count > 50 ? "..." : ""))
+                            }
+                        }
                     }
                 }
             }

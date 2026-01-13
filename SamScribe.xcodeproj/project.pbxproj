@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8DA588792F165E23006A8FF7 /* AudioFileProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */; };
+		8DA5887B2F168BE0006A8FF7 /* TranscriptionBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */; };
 		D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */; };
 		D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029B2F0F0DEC007C5609 /* Speaker.swift */; };
 		D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */; };
@@ -18,9 +19,6 @@
 		D89673DE2F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C42F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift */; };
 		D89673DF2F0E5C8E00469222 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */; };
 		D89673E02F0E5C8E00469222 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D02F0E5C8E00469222 /* SidebarView.swift */; };
-		D89673F02F0E5C8E00469223 /* AudioMiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */; };
-		D89673F12F0E5C8E00469224 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673F22F0E5C8E00469224 /* HomeView.swift */; };
-		D89673F32F0E5C8E00469225 /* TranscriptionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673F42F0E5C8E00469225 /* TranscriptionsListView.swift */; };
 		D89673E12F0E5C8E00469222 /* SamScribeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D82F0E5C8E00469222 /* SamScribeApp.swift */; };
 		D89673E22F0E5C8E00469222 /* RecordingControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */; };
 		D89673E32F0E5C8E00469222 /* TranscriptionSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C32F0E5C8E00469222 /* TranscriptionSegment.swift */; };
@@ -33,12 +31,16 @@
 		D89673EA2F0E5C8E00469222 /* AudioInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C72F0E5C8E00469222 /* AudioInput.swift */; };
 		D89673EB2F0E5C8E00469222 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D62F0E5C8E00469222 /* Logging.swift */; };
 		D89673ED2F0E5C8E00469222 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D89673D42F0E5C8E00469222 /* Assets.xcassets */; };
+		D89673F02F0E5C8E00469223 /* AudioMiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */; };
+		D89673F12F0E5C8E00469224 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673F22F0E5C8E00469224 /* HomeView.swift */; };
+		D89673F32F0E5C8E00469225 /* TranscriptionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673F42F0E5C8E00469225 /* TranscriptionsListView.swift */; };
 		D89DC3992F0369BD00F5628B /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = D89DC3982F0369BD00F5628B /* FluidAudio */; };
 		D89DC39B2F0369BE00F5628B /* FluidAudioTTS in Frameworks */ = {isa = PBXBuildFile; productRef = D89DC39A2F0369BE00F5628B /* FluidAudioTTS */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileProcessor.swift; sourceTree = "<group>"; };
+		8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionBlock.swift; sourceTree = "<group>"; };
 		D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpeakerSheet.swift; sourceTree = "<group>"; };
 		D81E029B2F0F0DEC007C5609 /* Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speaker.swift; sourceTree = "<group>"; };
 		D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerManager.swift; sourceTree = "<group>"; };
@@ -56,9 +58,6 @@
 		D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingControlsView.swift; sourceTree = "<group>"; };
 		D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		D89673D02F0E5C8E00469222 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
-		D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMiniPlayer.swift; sourceTree = "<group>"; };
-		D89673F22F0E5C8E00469224 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		D89673F42F0E5C8E00469225 /* TranscriptionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionsListView.swift; sourceTree = "<group>"; };
 		D89673D12F0E5C8E00469222 /* TranscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionView.swift; sourceTree = "<group>"; };
 		D89673D22F0E5C8E00469222 /* TranscriptSegmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptSegmentRow.swift; sourceTree = "<group>"; };
 		D89673D42F0E5C8E00469222 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -67,6 +66,9 @@
 		D89673D72F0E5C8E00469222 /* SamScribe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SamScribe.entitlements; sourceTree = "<group>"; };
 		D89673D82F0E5C8E00469222 /* SamScribeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamScribeApp.swift; sourceTree = "<group>"; };
 		D89673EE2F0E5C9600469222 /* SamScribe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SamScribe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMiniPlayer.swift; sourceTree = "<group>"; };
+		D89673F22F0E5C8E00469224 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		D89673F42F0E5C8E00469225 /* TranscriptionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionsListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				D89673C12F0E5C8E00469222 /* Recording.swift */,
 				D89673C22F0E5C8E00469222 /* RecordingViewModel.swift */,
 				D89673C32F0E5C8E00469222 /* TranscriptionSegment.swift */,
+				8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */,
 				D89673C42F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift */,
 			);
 			path = Models;
@@ -242,6 +245,7 @@
 				D89673E12F0E5C8E00469222 /* SamScribeApp.swift in Sources */,
 				D89673E22F0E5C8E00469222 /* RecordingControlsView.swift in Sources */,
 				D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */,
+				8DA5887B2F168BE0006A8FF7 /* TranscriptionBlock.swift in Sources */,
 				D89673E32F0E5C8E00469222 /* TranscriptionSegment.swift in Sources */,
 				D89673E42F0E5C8E00469222 /* TranscriptSegmentRow.swift in Sources */,
 				D89673E52F0E5C8E00469222 /* Transcriber.swift in Sources */,
