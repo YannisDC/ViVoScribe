@@ -1,8 +1,12 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import CoreAudio
 
 struct HomeView: View {
     @Bindable var store: TranscriptionsStore
+    let audioManager: AudioManager
+    @Binding var microphonePermission: PermissionState
+    @Binding var showMicrophoneAlert: Bool
     @State private var showFileImporter = false
     @State private var urlInput = ""
     
@@ -96,9 +100,9 @@ struct HomeView: View {
             GridItem(.flexible(), spacing: 16)
         ], spacing: 16) {
             ActionButton(
-                icon: "mic.fill",
-                title: "New Voice Memo",
-                action: { /* Start voice memo */ }
+                icon: audioManager.isRecording ? "stop.circle.fill" : "mic.fill",
+                title: audioManager.isRecording ? "Stop Voice Memo" : "New Voice Memo",
+                action: { startVoiceMemo() }
             )
             
             ActionButton(
@@ -221,6 +225,51 @@ struct HomeView: View {
             try await store.importAudioFile(url: url)
         } catch {
             print("Failed to import audio file: \(error.localizedDescription)")
+        }
+    }
+    
+    private func startVoiceMemo() {
+        // Check if already recording
+        if audioManager.isRecording {
+            // Stop recording if already recording
+            Task {
+                do {
+                    try await audioManager.stopRecording()
+                    store.stopCurrentRecording()
+                } catch {
+                    print("Failed to stop recording: \(error)")
+                }
+            }
+            return
+        }
+        
+        // Check microphone permission
+        if microphonePermission == .denied {
+            showMicrophoneAlert = true
+            return
+        }
+        
+        // Start recording with microphone only
+        store.createNewRecording()
+        
+        Task {
+            do {
+                // Get default audio input device
+                let microphoneDeviceID = try AudioDeviceID.readDefaultSystemInputDevice()
+                
+                // Start recording with microphone only (no app audio)
+                try await audioManager.startRecording(
+                    microphoneDeviceID: microphoneDeviceID,
+                    appProcessID: 0,
+                    microphoneOnly: true
+                )
+            } catch {
+                print("Failed to start voice memo: \(error)")
+                // Clean up recording if start failed
+                if store.currentRecording != nil {
+                    store.stopCurrentRecording()
+                }
+            }
         }
     }
 }

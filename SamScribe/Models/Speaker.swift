@@ -8,6 +8,7 @@ final class Speaker {
     var customName: String?  // User-provided name (optional)
     var speakerNumber: Int   // Auto-assigned
     var embeddingData: Data 
+    var colorHex: String?   // User-selected color (hex string, optional)
     var createdAt: Date
     var updatedAt: Date
 
@@ -26,6 +27,7 @@ final class Speaker {
         speakerNumber: Int,
         embeddingData: Data,
         customName: String? = nil,
+        colorHex: String? = nil,
         createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
@@ -33,6 +35,7 @@ final class Speaker {
         self.speakerNumber = speakerNumber
         self.embeddingData = embeddingData
         self.customName = customName
+        self.colorHex = colorHex
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.segments = []

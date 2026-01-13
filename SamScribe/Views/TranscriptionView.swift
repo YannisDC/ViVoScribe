@@ -28,7 +28,7 @@ struct TranscriptionView: View {
         } detail: {
             switch selectedSection {
             case .home:
-                HomeView(store: store)
+                HomeView(store: store, audioManager: audioManager, microphonePermission: $microphonePermission, showMicrophoneAlert: $showMicrophoneAlert)
                     .navigationTitle("Home")
             case .transcriptions:
                 if let recording = store.selectedRecording {
@@ -66,44 +66,12 @@ struct TranscriptionView: View {
                             }
                         }
                 } else {
-                    HomeView(store: store)
+                    HomeView(store: store, audioManager: audioManager, microphonePermission: $microphonePermission, showMicrophoneAlert: $showMicrophoneAlert)
                         .navigationTitle("Home")
                 }
             }
         }
         .toolbar {
-            ToolbarItem(placement: .automatic) {
-                HStack(spacing: 12) {
-                    Button {
-                        importAudioFile()
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "square.and.arrow.down")
-                            Text("Import Audio")
-                        }
-                        .padding(.horizontal, 4)
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(store.currentRecording != nil || isImporting)
-                    
-                    Button {
-                        if store.currentRecording != nil {
-                            stopRecording()
-                        } else {
-                            checkPermissionsAndStartRecording()
-                        }
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: store.currentRecording != nil ? "stop.circle.fill" : "waveform")
-                            Text(store.currentRecording != nil ? "Stop Transcribing" : "Start Transcribing")
-                        }
-                        .padding(.horizontal, 4)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(store.currentRecording != nil ? .red : .accentColor)
-                    .disabled(microphonePermission == .checking || screenRecordingPermission == .checking)
-                }
-            }
         }
         .fileImporter(
             isPresented: $showFileImporter,

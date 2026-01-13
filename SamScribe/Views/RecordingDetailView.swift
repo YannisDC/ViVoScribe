@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct RecordingDetailView: View {
     @Bindable var store: TranscriptionsStore
@@ -115,8 +116,8 @@ struct RecordingDetailView: View {
         .sheet(item: $editingSpeaker) { speaker in
             EditSpeakerSheet(
                 speaker: speaker,
-                onSave: { newName in
-                    store.renameSpeaker(speaker, newName: newName)
+                onSave: { newName, colorHex in
+                    store.updateSpeaker(speaker, newName: newName, colorHex: colorHex)
                     editingSpeaker = nil
                 },
                 onCancel: { editingSpeaker = nil },
@@ -335,6 +336,12 @@ struct RecordingDetailView: View {
     }
     
     private func colorForSpeaker(_ speaker: Speaker) -> Color {
+        // Use stored color if available
+        if let hex = speaker.colorHex, let color = Color(hex: hex) {
+            return color
+        }
+        
+        // Fallback to hash-based color
         let colors: [Color] = [.red, .blue, .green, .purple, .orange, .pink, .cyan, .mint, .indigo, .yellow]
         let index = abs(speaker.id.hashValue) % colors.count
         return colors[index]
@@ -394,32 +401,43 @@ struct TranscriptSegmentView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if let speaker = segment.speaker {
-                Button(action: onEditSpeaker) {
-                    Text(speaker.displayName)
+            // Speaker name, timestamp, and play button in one row
+            HStack(spacing: 8) {
+                if let speaker = segment.speaker {
+                    Button(action: onEditSpeaker) {
+                        Text(speaker.displayName)
+                            .font(.system(size: CGFloat(fontSize), weight: .semibold))
+                            .foregroundColor(colorForSpeaker(speaker))
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Text("No Speaker")
                         .font(.system(size: CGFloat(fontSize), weight: .semibold))
-                        .foregroundColor(colorForSpeaker(speaker))
+                        .foregroundColor(.secondary)
+                }
+                
+                if showTimestamps {
+                    let endTimestamp = segment.timestamp.addingTimeInterval(segment.endTime - segment.startTime)
+                    HStack(spacing: 4) {
+                        Text(segment.timestamp.formatted(date: .omitted, time: .standard))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("–")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text(endTimestamp.formatted(date: .omitted, time: .standard))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Button(action: onSeekToSegment) {
+                    Image(systemName: "play.circle")
+                        .font(.caption)
+                        .foregroundColor(.accentColor)
                 }
                 .buttonStyle(.plain)
-            } else {
-                Text("No Speaker")
-                    .font(.system(size: CGFloat(fontSize), weight: .semibold))
-                    .foregroundColor(.secondary)
-            }
-            
-            if showTimestamps {
-                let endTimestamp = segment.timestamp.addingTimeInterval(segment.endTime - segment.startTime)
-                HStack(spacing: 4) {
-                    Text(segment.timestamp.formatted(date: .omitted, time: .standard))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("–")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text(endTimestamp.formatted(date: .omitted, time: .standard))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                .help("Play from segment start")
             }
             
             if isEditing {
@@ -428,7 +446,8 @@ struct TranscriptSegmentView: View {
                     .frame(minHeight: 60)
                     .focused($isFocused)
                     .onAppear {
-                        editedText = segment.text
+                        // Show original text when editing
+                        editedText = segment.originalText
                         isFocused = true
                     }
                 
@@ -445,17 +464,28 @@ struct TranscriptSegmentView: View {
                 }
             } else {
                 HStack(alignment: .top, spacing: 8) {
-                    Button(action: onSeekToSegment) {
-                        Image(systemName: "play.circle")
-                            .font(.caption)
-                            .foregroundColor(.accentColor)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Play from segment start")
-                    
+                    // Show edited text (or original if not edited)
                     Text(segment.text)
                         .font(.system(size: CGFloat(fontSize)))
                         .textSelection(.enabled)
+                    
+                    // Edit button
+                    Button(action: onEdit) {
+                        Image(systemName: "pencil")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Edit segment")
+                    
+                    // Delete button
+                    Button(role: .destructive, action: onDelete) {
+                        Image(systemName: "trash")
+                            .font(.caption)
+                            .foregroundColor(.red)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Delete segment")
                 }
                 .contextMenu {
                     Button {
@@ -465,7 +495,6 @@ struct TranscriptSegmentView: View {
                     }
                     
                     Button {
-                        editedText = segment.text
                         onEdit()
                     } label: {
                         Label("Edit", systemImage: "pencil")
@@ -483,6 +512,12 @@ struct TranscriptSegmentView: View {
     }
     
     private func colorForSpeaker(_ speaker: Speaker) -> Color {
+        // Use stored color if available
+        if let hex = speaker.colorHex, let color = Color(hex: hex) {
+            return color
+        }
+        
+        // Fallback to hash-based color
         let colors: [Color] = [.red, .blue, .green, .purple, .orange, .pink, .cyan, .mint, .indigo, .yellow]
         let index = abs(speaker.id.hashValue) % colors.count
         return colors[index]
@@ -513,44 +548,59 @@ struct TranscriptBlockView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            // Speaker name
-            if let speaker = block.speaker {
-                Button(action: onEditSpeaker) {
-                    Text(speaker.displayName)
+            // Speaker name, timestamp, and play button in one row
+            HStack(spacing: 8) {
+                if let speaker = block.speaker {
+                    Button(action: onEditSpeaker) {
+                        Text(speaker.displayName)
+                            .font(.system(size: CGFloat(fontSize), weight: .semibold))
+                            .foregroundColor(colorForSpeaker(speaker))
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Text("No Speaker")
                         .font(.system(size: CGFloat(fontSize), weight: .semibold))
-                        .foregroundColor(colorForSpeaker(speaker))
+                        .foregroundColor(.secondary)
+                }
+                
+                // Timestamps
+                if showTimestamps {
+                    HStack(spacing: 4) {
+                        Text(block.startTimestamp.formatted(date: .omitted, time: .standard))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("–")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text(block.endTimestamp.formatted(date: .omitted, time: .standard))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Button(action: {
+                    if let firstSegment = block.segments.first {
+                        onSeekToSegment(firstSegment)
+                    }
+                }) {
+                    Image(systemName: "play.circle")
+                        .font(.caption)
+                        .foregroundColor(.accentColor)
                 }
                 .buttonStyle(.plain)
-            } else {
-                Text("No Speaker")
-                    .font(.system(size: CGFloat(fontSize), weight: .semibold))
-                    .foregroundColor(.secondary)
-            }
-            
-            // Timestamps
-            if showTimestamps {
-                HStack(spacing: 4) {
-                    Text(block.startTimestamp.formatted(date: .omitted, time: .standard))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("–")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text(block.endTimestamp.formatted(date: .omitted, time: .standard))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                .help("Play from block start")
             }
             
             // Show editing UI if a segment is being edited, otherwise show combined text
             if let editingSegment = editingSegment {
-                // Editing mode for a specific segment
+                // Editing mode for a specific segment - show original text
                 TextEditor(text: $editedText)
                     .font(.system(size: CGFloat(fontSize)))
                     .frame(minHeight: 60)
                     .focused($isFocused)
                     .onAppear {
-                        editedText = editingSegment.text
+                        // Show original text when editing
+                        editedText = editingSegment.originalText
                         isFocused = true
                     }
                 
@@ -566,24 +616,10 @@ struct TranscriptBlockView: View {
                     .buttonStyle(.bordered)
                 }
             } else {
-                // Normal display mode - show combined text
-                HStack(alignment: .top, spacing: 8) {
-                    Button(action: {
-                        if let firstSegment = block.segments.first {
-                            onSeekToSegment(firstSegment)
-                        }
-                    }) {
-                        Image(systemName: "play.circle")
-                            .font(.caption)
-                            .foregroundColor(.accentColor)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Play from block start")
-                    
-                    Text(block.combinedText)
-                        .font(.system(size: CGFloat(fontSize)))
-                        .textSelection(.enabled)
-                }
+                // Normal display mode - show combined text (using edited text)
+                Text(block.combinedText)
+                    .font(.system(size: CGFloat(fontSize)))
+                    .textSelection(.enabled)
                 .contextMenu {
                     if let firstSegment = block.segments.first {
                         Button {
@@ -625,6 +661,12 @@ struct TranscriptBlockView: View {
     }
     
     private func colorForSpeaker(_ speaker: Speaker) -> Color {
+        // Use stored color if available
+        if let hex = speaker.colorHex, let color = Color(hex: hex) {
+            return color
+        }
+        
+        // Fallback to hash-based color
         let colors: [Color] = [.red, .blue, .green, .purple, .orange, .pink, .cyan, .mint, .indigo, .yellow]
         let index = abs(speaker.id.hashValue) % colors.count
         return colors[index]

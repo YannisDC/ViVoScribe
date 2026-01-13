@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import AppKit
 
 struct SidebarView: View {
     @Bindable var store: TranscriptionsStore
@@ -182,6 +183,12 @@ struct SidebarView: View {
     }
     
     private func colorForSpeaker(_ speaker: Speaker) -> Color {
+        // Use stored color if available
+        if let hex = speaker.colorHex, let color = Color(hex: hex) {
+            return color
+        }
+        
+        // Fallback to hash-based color
         let colors: [Color] = [.blue, .green, .orange, .purple, .pink, .red, .yellow, .cyan, .mint, .indigo]
         let index = abs(speaker.id.hashValue) % colors.count
         return colors[index]

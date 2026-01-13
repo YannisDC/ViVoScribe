@@ -2,7 +2,8 @@ import Foundation
 
 struct TranscriptionSegmentViewModel: Identifiable, Sendable {
     let id: UUID
-    let text: String
+    let text: String  // Current text (may be edited)
+    let originalText: String  // Original transcription text (falls back to text if not set)
     let speakerLabel: String?
     let speaker: Speaker?
     let confidence: Float
@@ -15,6 +16,8 @@ struct TranscriptionSegmentViewModel: Identifiable, Sendable {
     init(from segment: TranscriptionSegment) {
         self.id = segment.id
         self.text = segment.text
+        // Use originalText if available, otherwise fall back to text (for migration)
+        self.originalText = segment.originalText ?? segment.text
         self.speakerLabel = segment.speakerLabel
         self.speaker = segment.speaker
         self.confidence = segment.confidence

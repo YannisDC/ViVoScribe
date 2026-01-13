@@ -4,7 +4,8 @@ import SwiftData
 @Model
 final class TranscriptionSegment {
     var id: UUID
-    var text: String
+    var text: String  // Editable text (may be edited by user)
+    var originalText: String?  // Original transcription text (never changes, optional for migration)
     @Transient var speakerLabel: String? {  // COMPUTED: Get from speaker relationship
         speaker?.displayName
     }
@@ -23,6 +24,7 @@ final class TranscriptionSegment {
     init(
         id: UUID = UUID(),
         text: String,
+        originalText: String? = nil,
         embeddingData: Data? = nil,
         confidence: Float,
         startTime: TimeInterval,
@@ -33,6 +35,8 @@ final class TranscriptionSegment {
     ) {
         self.id = id
         self.text = text
+        // If originalText is not provided, use text as the original
+        self.originalText = originalText ?? text
         self.embeddingData = embeddingData
         self.confidence = confidence
         self.startTime = startTime
@@ -55,6 +59,7 @@ final class TranscriptionSegment {
 
         self.init(
             text: result.text,
+            originalText: result.text,  // Store original text when creating from result
             embeddingData: embeddingData,
             confidence: result.confidence,
             startTime: result.startTime,

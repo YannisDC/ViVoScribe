@@ -39,7 +39,7 @@ final class AudioManager: ObservableObject {
 
     // MARK: - Recording Control
 
-    func startRecording(microphoneDeviceID: AudioDeviceID, appProcessID: pid_t) async throws {
+    func startRecording(microphoneDeviceID: AudioDeviceID, appProcessID: pid_t, microphoneOnly: Bool = false) async throws {
         guard !isRecording else { return }
 
         // Debug: Log permission state and app identity
@@ -53,14 +53,16 @@ final class AudioManager: ObservableObject {
             throw AudioManagerError.permissionDenied
         }
 
-        // Guard: Check screen recording permission (without triggering prompt)
-        if !checkScreenRecordingPermission() {
-            logger.info("⚠️ Screen recording permission not granted - requesting...")
-            requestScreenRecordingPermission()
-            throw AudioManagerError.permissionDenied
+        // Guard: Check screen recording permission only if not microphone-only mode
+        if !microphoneOnly {
+            if !checkScreenRecordingPermission() {
+                logger.info("⚠️ Screen recording permission not granted - requesting...")
+                requestScreenRecordingPermission()
+                throw AudioManagerError.permissionDenied
+            }
         }
 
-        logger.info("Starting recording - mic device: \(microphoneDeviceID)")
+        logger.info("Starting recording - mic device: \(microphoneDeviceID), microphoneOnly: \(microphoneOnly)")
 
         // Initialize transcriber
         try await transcriber.initialize()
@@ -89,10 +91,12 @@ final class AudioManager: ObservableObject {
             // Start microphone input
             try await startMicrophone(deviceID: microphoneDeviceID)
 
-            // Start app audio capture (will create streams for detected processes)
-            try await startAppAudio()
+            // Start app audio capture only if not microphone-only mode
+            if !microphoneOnly {
+                try await startAppAudio()
+            }
 
-            logger.info("✅ Recording started successfully")
+            logger.info("✅ Recording started successfully (microphoneOnly: \(microphoneOnly))")
         } catch {
             // Reset recording flag if startup failed
             isRecording = false

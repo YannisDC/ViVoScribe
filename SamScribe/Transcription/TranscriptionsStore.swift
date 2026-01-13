@@ -335,6 +335,30 @@ final class TranscriptionsStore {
         refreshSelectedRecording()  // Refresh to show updated names
     }
     
+    // NEW: Speaker color update method
+    func updateSpeakerColor(_ speaker: Speaker, colorHex: String?) {
+        guard let context = modelContext else { return }
+        
+        do {
+            speaker.colorHex = colorHex
+            speaker.updatedAt = Date()
+            try context.save()
+            logger.info("Updated speaker color: \(speaker.id)")
+            
+            // Refresh selected recording to show updated colors
+            refreshSelectedRecording()
+        } catch {
+            logger.error("Failed to update speaker color: \(error.localizedDescription)", error: error)
+        }
+    }
+    
+    // NEW: Speaker rename and color update method
+    func updateSpeaker(_ speaker: Speaker, newName: String, colorHex: String?) {
+        guard let speakerManager = speakerManager else { return }
+        speakerManager.renameSpeaker(speaker, newName: newName)
+        updateSpeakerColor(speaker, colorHex: colorHex)
+    }
+    
     // NEW: Speaker delete method
     func deleteSpeaker(_ speaker: Speaker) {
         guard let context = modelContext else { return }

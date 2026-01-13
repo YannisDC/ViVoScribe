@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D8B09F12F16E6F00005E458 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09F02F16E6F00005E458 /* FluidAudio */; };
+		8D8B09F32F16E6F00005E458 /* FluidAudioTTS in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09F22F16E6F00005E458 /* FluidAudioTTS */; };
+		8D8B09F62F16E7120005E458 /* MLXEmbedders in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09F52F16E7120005E458 /* MLXEmbedders */; };
+		8D8B09F82F16E7120005E458 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09F72F16E7120005E458 /* MLXLLM */; };
+		8D8B09FA2F16E7120005E458 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09F92F16E7120005E458 /* MLXLMCommon */; };
+		8D8B09FC2F16E7120005E458 /* MLXVLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09FB2F16E7120005E458 /* MLXVLM */; };
+		8D8B0A012F16EFF90005E458 /* YouTubeDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B0A002F16EFF90005E458 /* YouTubeDownloader.swift */; };
 		8DA588792F165E23006A8FF7 /* AudioFileProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */; };
 		8DA5887B2F168BE0006A8FF7 /* TranscriptionBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */; };
 		8DA5887E2F1692D8006A8FF7 /* QandAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5887D2F1692D8006A8FF7 /* QandAView.swift */; };
-		8DA5889C2F169AD7006A8FF7 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA5889B2F169AD7006A8FF7 /* FluidAudio */; };
-		8DA5889E2F169AD7006A8FF7 /* FluidAudioTTS in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA5889D2F169AD7006A8FF7 /* FluidAudioTTS */; };
-		8DA588A12F169AF9006A8FF7 /* MLXEmbedders in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A02F169AF9006A8FF7 /* MLXEmbedders */; };
-		8DA588A32F169AF9006A8FF7 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A22F169AF9006A8FF7 /* MLXLLM */; };
-		8DA588A52F169AF9006A8FF7 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A42F169AF9006A8FF7 /* MLXLMCommon */; };
-		8DA588A72F169AF9006A8FF7 /* MLXVLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A62F169AF9006A8FF7 /* MLXVLM */; };
 		D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */; };
 		D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029B2F0F0DEC007C5609 /* Speaker.swift */; };
 		D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8D8B0A002F16EFF90005E458 /* YouTubeDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeDownloader.swift; sourceTree = "<group>"; };
 		8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileProcessor.swift; sourceTree = "<group>"; };
 		8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionBlock.swift; sourceTree = "<group>"; };
 		8DA5887D2F1692D8006A8FF7 /* QandAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QandAView.swift; sourceTree = "<group>"; };
@@ -84,12 +86,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DA588A52F169AF9006A8FF7 /* MLXLMCommon in Frameworks */,
-				8DA588A32F169AF9006A8FF7 /* MLXLLM in Frameworks */,
-				8DA588A72F169AF9006A8FF7 /* MLXVLM in Frameworks */,
-				8DA5889E2F169AD7006A8FF7 /* FluidAudioTTS in Frameworks */,
-				8DA5889C2F169AD7006A8FF7 /* FluidAudio in Frameworks */,
-				8DA588A12F169AF9006A8FF7 /* MLXEmbedders in Frameworks */,
+				8D8B09FA2F16E7120005E458 /* MLXLMCommon in Frameworks */,
+				8D8B09F82F16E7120005E458 /* MLXLLM in Frameworks */,
+				8D8B09FC2F16E7120005E458 /* MLXVLM in Frameworks */,
+				8D8B09F32F16E6F00005E458 /* FluidAudioTTS in Frameworks */,
+				8D8B09F12F16E6F00005E458 /* FluidAudio in Frameworks */,
+				8D8B09F62F16E7120005E458 /* MLXEmbedders in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +118,7 @@
 				D89673C62F0E5C8E00469222 /* ApplicationAudio.swift */,
 				D89673C72F0E5C8E00469222 /* AudioInput.swift */,
 				8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */,
+				8D8B0A002F16EFF90005E458 /* YouTubeDownloader.swift */,
 				D89673C82F0E5C8E00469222 /* AudioManager.swift */,
 				D89673C92F0E5C8E00469222 /* AudioMonitor.swift */,
 				D89673CA2F0E5C8E00469222 /* AudioProcess.swift */,
@@ -183,12 +186,12 @@
 			);
 			name = SamScribe;
 			packageProductDependencies = (
-				8DA5889B2F169AD7006A8FF7 /* FluidAudio */,
-				8DA5889D2F169AD7006A8FF7 /* FluidAudioTTS */,
-				8DA588A02F169AF9006A8FF7 /* MLXEmbedders */,
-				8DA588A22F169AF9006A8FF7 /* MLXLLM */,
-				8DA588A42F169AF9006A8FF7 /* MLXLMCommon */,
-				8DA588A62F169AF9006A8FF7 /* MLXVLM */,
+				8D8B09F02F16E6F00005E458 /* FluidAudio */,
+				8D8B09F22F16E6F00005E458 /* FluidAudioTTS */,
+				8D8B09F52F16E7120005E458 /* MLXEmbedders */,
+				8D8B09F72F16E7120005E458 /* MLXLLM */,
+				8D8B09F92F16E7120005E458 /* MLXLMCommon */,
+				8D8B09FB2F16E7120005E458 /* MLXVLM */,
 			);
 			productName = e;
 			productReference = D89673EE2F0E5C9600469222 /* SamScribe.app */;
@@ -219,9 +222,9 @@
 			mainGroup = D89DC33B2F03138E00F5628B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */,
-				8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
-				8DA588A82F169B03006A8FF7 /* XCRemoteSwiftPackageReference "LumoKit" */,
+				8D8B09EF2F16E6F00005E458 /* XCRemoteSwiftPackageReference "FluidAudio" */,
+				8D8B09F42F16E7120005E458 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
+				8D8B0A022F16F1DE0005E458 /* XCRemoteSwiftPackageReference "YouTubeKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D89DC33B2F03138E00F5628B;
@@ -253,6 +256,7 @@
 				D89673DB2F0E5C8E00469222 /* AudioMonitor.swift in Sources */,
 				D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */,
 				D89673DC2F0E5C8E00469222 /* AudioProcess.swift in Sources */,
+				8D8B0A012F16EFF90005E458 /* YouTubeDownloader.swift in Sources */,
 				D89673DD2F0E5C8E00469222 /* TranscriptionView.swift in Sources */,
 				D89673DE2F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift in Sources */,
 				D89673DF2F0E5C8E00469222 /* RecordingDetailView.swift in Sources */,
@@ -435,7 +439,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViVoScribe.transcription;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -489,7 +493,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViVoScribe.transcription;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -533,7 +537,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
+		8D8B09EF2F16E6F00005E458 /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/FluidInference/FluidAudio.git";
 			requirement = {
@@ -541,7 +545,7 @@
 				kind = branch;
 			};
 		};
-		8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */ = {
+		8D8B09F42F16E7120005E458 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ml-explore/mlx-swift-lm/";
 			requirement = {
@@ -549,45 +553,45 @@
 				minimumVersion = 2.29.3;
 			};
 		};
-		8DA588A82F169B03006A8FF7 /* XCRemoteSwiftPackageReference "LumoKit" */ = {
+		8D8B0A022F16F1DE0005E458 /* XCRemoteSwiftPackageReference "YouTubeKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rryam/LumoKit.git";
+			repositoryURL = "https://github.com/alexeichhorn/YouTubeKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
+				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8DA5889B2F169AD7006A8FF7 /* FluidAudio */ = {
+		8D8B09F02F16E6F00005E458 /* FluidAudio */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */;
+			package = 8D8B09EF2F16E6F00005E458 /* XCRemoteSwiftPackageReference "FluidAudio" */;
 			productName = FluidAudio;
 		};
-		8DA5889D2F169AD7006A8FF7 /* FluidAudioTTS */ = {
+		8D8B09F22F16E6F00005E458 /* FluidAudioTTS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */;
+			package = 8D8B09EF2F16E6F00005E458 /* XCRemoteSwiftPackageReference "FluidAudio" */;
 			productName = FluidAudioTTS;
 		};
-		8DA588A02F169AF9006A8FF7 /* MLXEmbedders */ = {
+		8D8B09F52F16E7120005E458 /* MLXEmbedders */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			package = 8D8B09F42F16E7120005E458 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
 			productName = MLXEmbedders;
 		};
-		8DA588A22F169AF9006A8FF7 /* MLXLLM */ = {
+		8D8B09F72F16E7120005E458 /* MLXLLM */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			package = 8D8B09F42F16E7120005E458 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
 			productName = MLXLLM;
 		};
-		8DA588A42F169AF9006A8FF7 /* MLXLMCommon */ = {
+		8D8B09F92F16E7120005E458 /* MLXLMCommon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			package = 8D8B09F42F16E7120005E458 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
 			productName = MLXLMCommon;
 		};
-		8DA588A62F169AF9006A8FF7 /* MLXVLM */ = {
+		8D8B09FB2F16E7120005E458 /* MLXVLM */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			package = 8D8B09F42F16E7120005E458 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
 			productName = MLXVLM;
 		};
 /* End XCSwiftPackageProductDependency section */
