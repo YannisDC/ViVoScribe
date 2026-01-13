@@ -17,6 +17,7 @@ struct RecordingDetailView: View {
     @State private var transcriptViewMode: TranscriptViewMode = .list
     @State private var searchText: String = ""
     @State private var newSpeakerName: String = ""
+    @State private var showQandA: Bool = false
 
     var body: some View {
         HStack(spacing: 0) {
@@ -125,6 +126,11 @@ struct RecordingDetailView: View {
                 }
             )
         }
+        .sheet(isPresented: $showQandA) {
+            if let recording = store.selectedRecording, !recording.segments.isEmpty {
+                QandAView(transcriptionText: getFullTranscriptionText(from: recording))
+            }
+        }
         .onChange(of: store.selectedRecording?.id) { oldValue, newValue in
             // Stop accessing previous resource
             if isAccessingSecurityScopedResource, let oldURL = resolvedAudioFileURL {
@@ -217,6 +223,13 @@ struct RecordingDetailView: View {
                 }
                 .buttonStyle(.plain)
                 .help("Info")
+                
+                Button(action: { showQandA = true }) {
+                    Image(systemName: "questionmark.circle")
+                }
+                .buttonStyle(.plain)
+                .help("Q&A")
+                .disabled(store.selectedRecording?.segments.isEmpty ?? true)
                 
                 Button(action: {}) {
                     Image(systemName: "square.and.arrow.up")
@@ -480,6 +493,14 @@ struct RecordingDetailView: View {
         let colors: [Color] = [.red, .blue, .green, .purple, .orange, .pink, .cyan, .mint, .indigo, .yellow]
         let index = abs(speaker.id.hashValue) % colors.count
         return colors[index]
+    }
+    
+    // Helper function to get full transcription text from segments
+    private func getFullTranscriptionText(from recording: RecordingViewModel) -> String {
+        return recording.segments
+            .sorted(by: { $0.timestamp < $1.timestamp })
+            .map { $0.text }
+            .joined(separator: " ")
     }
     
     // Helper function to resolve URL from bookmark string

@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		8DA588792F165E23006A8FF7 /* AudioFileProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */; };
 		8DA5887B2F168BE0006A8FF7 /* TranscriptionBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */; };
+		8DA5887E2F1692D8006A8FF7 /* QandAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5887D2F1692D8006A8FF7 /* QandAView.swift */; };
+		8DA5889C2F169AD7006A8FF7 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA5889B2F169AD7006A8FF7 /* FluidAudio */; };
+		8DA5889E2F169AD7006A8FF7 /* FluidAudioTTS in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA5889D2F169AD7006A8FF7 /* FluidAudioTTS */; };
+		8DA588A12F169AF9006A8FF7 /* MLXEmbedders in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A02F169AF9006A8FF7 /* MLXEmbedders */; };
+		8DA588A32F169AF9006A8FF7 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A22F169AF9006A8FF7 /* MLXLLM */; };
+		8DA588A52F169AF9006A8FF7 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A42F169AF9006A8FF7 /* MLXLMCommon */; };
+		8DA588A72F169AF9006A8FF7 /* MLXVLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8DA588A62F169AF9006A8FF7 /* MLXVLM */; };
 		D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */; };
 		D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029B2F0F0DEC007C5609 /* Speaker.swift */; };
 		D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */; };
@@ -30,17 +37,17 @@
 		D89673E92F0E5C8E00469222 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C82F0E5C8E00469222 /* AudioManager.swift */; };
 		D89673EA2F0E5C8E00469222 /* AudioInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673C72F0E5C8E00469222 /* AudioInput.swift */; };
 		D89673EB2F0E5C8E00469222 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673D62F0E5C8E00469222 /* Logging.swift */; };
+		D89673EC2F0E5C8E00469223 /* TranscriptionAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673F52F0E5C8E00469226 /* TranscriptionAnalyzer.swift */; };
 		D89673ED2F0E5C8E00469222 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D89673D42F0E5C8E00469222 /* Assets.xcassets */; };
 		D89673F02F0E5C8E00469223 /* AudioMiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */; };
 		D89673F12F0E5C8E00469224 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673F22F0E5C8E00469224 /* HomeView.swift */; };
 		D89673F32F0E5C8E00469225 /* TranscriptionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89673F42F0E5C8E00469225 /* TranscriptionsListView.swift */; };
-		D89DC3992F0369BD00F5628B /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = D89DC3982F0369BD00F5628B /* FluidAudio */; };
-		D89DC39B2F0369BE00F5628B /* FluidAudioTTS in Frameworks */ = {isa = PBXBuildFile; productRef = D89DC39A2F0369BE00F5628B /* FluidAudioTTS */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileProcessor.swift; sourceTree = "<group>"; };
 		8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionBlock.swift; sourceTree = "<group>"; };
+		8DA5887D2F1692D8006A8FF7 /* QandAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QandAView.swift; sourceTree = "<group>"; };
 		D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpeakerSheet.swift; sourceTree = "<group>"; };
 		D81E029B2F0F0DEC007C5609 /* Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speaker.swift; sourceTree = "<group>"; };
 		D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerManager.swift; sourceTree = "<group>"; };
@@ -69,6 +76,7 @@
 		D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMiniPlayer.swift; sourceTree = "<group>"; };
 		D89673F22F0E5C8E00469224 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		D89673F42F0E5C8E00469225 /* TranscriptionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionsListView.swift; sourceTree = "<group>"; };
+		D89673F52F0E5C8E00469226 /* TranscriptionAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionAnalyzer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +84,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D89DC39B2F0369BE00F5628B /* FluidAudioTTS in Frameworks */,
-				D89DC3992F0369BD00F5628B /* FluidAudio in Frameworks */,
+				8DA588A52F169AF9006A8FF7 /* MLXLMCommon in Frameworks */,
+				8DA588A32F169AF9006A8FF7 /* MLXLLM in Frameworks */,
+				8DA588A72F169AF9006A8FF7 /* MLXVLM in Frameworks */,
+				8DA5889E2F169AD7006A8FF7 /* FluidAudioTTS in Frameworks */,
+				8DA5889C2F169AD7006A8FF7 /* FluidAudio in Frameworks */,
+				8DA588A12F169AF9006A8FF7 /* MLXEmbedders in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +121,7 @@
 				D89673CA2F0E5C8E00469222 /* AudioProcess.swift */,
 				D89673CB2F0E5C8E00469222 /* Transcriber.swift */,
 				D89673CC2F0E5C8E00469222 /* TranscriptionsStore.swift */,
+				D89673F52F0E5C8E00469226 /* TranscriptionAnalyzer.swift */,
 			);
 			path = Transcription;
 			sourceTree = "<group>";
@@ -119,6 +132,7 @@
 				D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */,
 				D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */,
 				D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */,
+				8DA5887D2F1692D8006A8FF7 /* QandAView.swift */,
 				D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */,
 				D89673F22F0E5C8E00469224 /* HomeView.swift */,
 				D89673D02F0E5C8E00469222 /* SidebarView.swift */,
@@ -169,8 +183,12 @@
 			);
 			name = SamScribe;
 			packageProductDependencies = (
-				D89DC3982F0369BD00F5628B /* FluidAudio */,
-				D89DC39A2F0369BE00F5628B /* FluidAudioTTS */,
+				8DA5889B2F169AD7006A8FF7 /* FluidAudio */,
+				8DA5889D2F169AD7006A8FF7 /* FluidAudioTTS */,
+				8DA588A02F169AF9006A8FF7 /* MLXEmbedders */,
+				8DA588A22F169AF9006A8FF7 /* MLXLLM */,
+				8DA588A42F169AF9006A8FF7 /* MLXLMCommon */,
+				8DA588A62F169AF9006A8FF7 /* MLXVLM */,
 			);
 			productName = e;
 			productReference = D89673EE2F0E5C9600469222 /* SamScribe.app */;
@@ -201,7 +219,9 @@
 			mainGroup = D89DC33B2F03138E00F5628B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				D89DC3972F0369BD00F5628B /* XCRemoteSwiftPackageReference "FluidAudioSwift" */,
+				8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */,
+				8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
+				8DA588A82F169B03006A8FF7 /* XCRemoteSwiftPackageReference "LumoKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D89DC33B2F03138E00F5628B;
@@ -247,6 +267,7 @@
 				D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */,
 				8DA5887B2F168BE0006A8FF7 /* TranscriptionBlock.swift in Sources */,
 				D89673E32F0E5C8E00469222 /* TranscriptionSegment.swift in Sources */,
+				8DA5887E2F1692D8006A8FF7 /* QandAView.swift in Sources */,
 				D89673E42F0E5C8E00469222 /* TranscriptSegmentRow.swift in Sources */,
 				D89673E52F0E5C8E00469222 /* Transcriber.swift in Sources */,
 				D89673E62F0E5C8E00469222 /* ApplicationAudio.swift in Sources */,
@@ -255,6 +276,7 @@
 				D89673E92F0E5C8E00469222 /* AudioManager.swift in Sources */,
 				D89673EA2F0E5C8E00469222 /* AudioInput.swift in Sources */,
 				D89673EB2F0E5C8E00469222 /* Logging.swift in Sources */,
+				D89673EC2F0E5C8E00469223 /* TranscriptionAnalyzer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,26 +533,62 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D89DC3972F0369BD00F5628B /* XCRemoteSwiftPackageReference "FluidAudioSwift" */ = {
+		8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/FluidInference/FluidAudioSwift";
+			repositoryURL = "https://github.com/FluidInference/FluidAudio.git";
 			requirement = {
 				branch = main;
 				kind = branch;
 			};
 		};
+		8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ml-explore/mlx-swift-lm/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.29.3;
+			};
+		};
+		8DA588A82F169B03006A8FF7 /* XCRemoteSwiftPackageReference "LumoKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rryam/LumoKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D89DC3982F0369BD00F5628B /* FluidAudio */ = {
+		8DA5889B2F169AD7006A8FF7 /* FluidAudio */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D89DC3972F0369BD00F5628B /* XCRemoteSwiftPackageReference "FluidAudioSwift" */;
+			package = 8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */;
 			productName = FluidAudio;
 		};
-		D89DC39A2F0369BE00F5628B /* FluidAudioTTS */ = {
+		8DA5889D2F169AD7006A8FF7 /* FluidAudioTTS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D89DC3972F0369BD00F5628B /* XCRemoteSwiftPackageReference "FluidAudioSwift" */;
+			package = 8DA5889A2F169AD7006A8FF7 /* XCRemoteSwiftPackageReference "FluidAudio" */;
 			productName = FluidAudioTTS;
+		};
+		8DA588A02F169AF9006A8FF7 /* MLXEmbedders */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXEmbedders;
+		};
+		8DA588A22F169AF9006A8FF7 /* MLXLLM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXLLM;
+		};
+		8DA588A42F169AF9006A8FF7 /* MLXLMCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXLMCommon;
+		};
+		8DA588A62F169AF9006A8FF7 /* MLXVLM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8DA5889F2F169AF9006A8FF7 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXVLM;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

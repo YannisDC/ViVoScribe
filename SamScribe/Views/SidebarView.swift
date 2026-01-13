@@ -6,6 +6,7 @@ struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
     @Binding var selectedSection: SidebarSection
     @State private var speakers: [Speaker] = []
+    @State private var blockCounts: [UUID: Int] = [:]
 
     var body: some View {
         List(selection: $selectedSection) {
@@ -75,7 +76,7 @@ struct SidebarView: View {
                             
                             Spacer()
                             
-                            Text("\(speaker.segments.count)")
+                            Text("\(blockCounts[speaker.id] ?? 0)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -95,6 +96,7 @@ struct SidebarView: View {
         .navigationTitle("SamScribe")
         .onAppear {
             loadSpeakers()
+            countBlocksPerSpeaker()
         }
         .onChange(of: selectedSection) { oldValue, newValue in
             handleSectionSelection(newValue)
@@ -110,6 +112,73 @@ struct SidebarView: View {
         } catch {
             print("Failed to fetch speakers: \(error)")
         }
+    }
+    
+    private func countBlocksPerSpeaker() {
+        do {
+            // Get all recordings
+            let recordingsDescriptor = FetchDescriptor<Recording>()
+            let recordings = try modelContext.fetch(recordingsDescriptor)
+            
+            // Count blocks per speaker
+            var counts: [UUID: Int] = [:]
+            
+            for recording in recordings {
+                // Get all segments for this recording, sorted by timestamp
+                let segments = recording.segments
+                    .sorted(by: { $0.timestamp < $1.timestamp })
+                    .map { TranscriptionSegmentViewModel(from: $0) }
+                
+                // Group segments into blocks (same logic as RecordingDetailView)
+                let blocks = groupSegmentsIntoBlocks(segments)
+                
+                // Count blocks per speaker
+                for block in blocks {
+                    if let speakerId = block.speaker?.id {
+                        counts[speakerId, default: 0] += 1
+                    }
+                }
+            }
+            
+            blockCounts = counts
+        } catch {
+            print("Failed to count blocks per speaker: \(error)")
+        }
+    }
+    
+    private func groupSegmentsIntoBlocks(_ segments: [TranscriptionSegmentViewModel]) -> [TranscriptionBlock] {
+        guard !segments.isEmpty else { return [] }
+        
+        var blocks: [TranscriptionBlock] = []
+        var currentBlockSegments: [TranscriptionSegmentViewModel] = []
+        
+        for segment in segments {
+            if currentBlockSegments.isEmpty {
+                // Start a new block
+                currentBlockSegments.append(segment)
+            } else {
+                // Check if this segment can be grouped with the current block
+                let lastSegment = currentBlockSegments.last!
+                let canGroup = (lastSegment.speaker?.id == segment.speaker?.id) && 
+                               (lastSegment.speaker != nil || segment.speaker == nil)
+                
+                if canGroup {
+                    // Add to current block
+                    currentBlockSegments.append(segment)
+                } else {
+                    // Finalize current block and start a new one
+                    blocks.append(TranscriptionBlock(segments: currentBlockSegments))
+                    currentBlockSegments = [segment]
+                }
+            }
+        }
+        
+        // Don't forget the last block
+        if !currentBlockSegments.isEmpty {
+            blocks.append(TranscriptionBlock(segments: currentBlockSegments))
+        }
+        
+        return blocks
     }
     
     private func colorForSpeaker(_ speaker: Speaker) -> Color {
@@ -151,6 +220,8 @@ struct SidebarView: View {
         store.deleteSpeaker(speaker)
         // Reload speakers after deletion
         loadSpeakers()
+        // Recalculate block counts
+        countBlocksPerSpeaker()
     }
 }
 
