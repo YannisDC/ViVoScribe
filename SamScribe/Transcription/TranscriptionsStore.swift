@@ -334,6 +334,22 @@ final class TranscriptionsStore {
         speakerManager.renameSpeaker(speaker, newName: newName)
         refreshSelectedRecording()  // Refresh to show updated names
     }
+    
+    // NEW: Speaker delete method
+    func deleteSpeaker(_ speaker: Speaker) {
+        guard let context = modelContext else { return }
+        
+        do {
+            context.delete(speaker)
+            try context.save()
+            logger.info("Deleted speaker: \(speaker.id)")
+            
+            // Refresh selected recording to update UI
+            refreshSelectedRecording()
+        } catch {
+            logger.error("Failed to delete speaker: \(error.localizedDescription)", error: error)
+        }
+    }
 
     // MARK: - Audio File Import
     

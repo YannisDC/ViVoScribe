@@ -20,24 +20,38 @@ struct TranscriptionView: View {
     @State private var isImporting = false
     @State private var importError: String?
 
+    @State private var selectedSection: SidebarSection = .home
+    
     var body: some View {
         NavigationSplitView {
-            SidebarView(store: store)
+            SidebarView(store: store, selectedSection: $selectedSection)
         } detail: {
             if let recording = store.selectedRecording {
                 RecordingDetailView(store: store)
                     .navigationTitle(recording.title)
+                    .toolbar {
+                        ToolbarItem(placement: .automatic) {
+                            Button {
+                                store.clearSelectedRecording()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "chevron.left")
+                                    Text("Back")
+                                }
+                            }
+                        }
+                    }
             } else {
-                VStack(spacing: 12) {
-                    Image(systemName: "waveform")
-                        .font(.system(size: 48))
-                        .foregroundColor(.accentColor)
-
-                    Text(store.recordings.isEmpty ? "Start a recording" : "Select a recording")
-                        .font(.title3)
-                        .foregroundColor(.accentColor)
+                switch selectedSection {
+                case .transcriptions:
+                    TranscriptionsListView(store: store)
+                case .home:
+                    HomeView(store: store)
+                        .navigationTitle("Home")
+                default:
+                    HomeView(store: store)
+                        .navigationTitle("Home")
                 }
-                .navigationTitle("SamScribe")
             }
         }
         .toolbar {
