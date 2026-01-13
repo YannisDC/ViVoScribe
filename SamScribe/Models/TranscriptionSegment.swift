@@ -47,6 +47,7 @@ final class TranscriptionSegment {
         let sourceType: String = switch result.audioSource {
         case .microphone: "microphone"
         case .appAudio: "appAudio"
+        case .fileAudio: "fileAudio"
         }
 
         // Convert embedding to Data if present

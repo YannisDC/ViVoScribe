@@ -335,4 +335,80 @@ final class TranscriptionsStore {
         refreshSelectedRecording()  // Refresh to show updated names
     }
 
+    // MARK: - Audio File Import
+    
+    func importAudioFile(url: URL) async throws {
+        guard let modelContext = modelContext else {
+            throw NSError(domain: "TranscriptionsStore", code: 1,
+                         userInfo: [NSLocalizedDescriptionKey: "ModelContext not initialized"])
+        }
+        
+        logger.info("Importing audio file: \(url.lastPathComponent)")
+        
+        // Create new recording for the imported file
+        let recording = Recording(
+            title: url.deletingPathExtension().lastPathComponent,
+            startDate: Date()
+        )
+        
+        modelContext.insert(recording)
+        currentRecording = recording
+        selectedRecordingId = recording.id
+        
+        // Add to cached array
+        recordings.insert(RecordingViewModel(from: recording), at: 0)
+        
+        try? modelContext.save()
+        logger.info("Created recording for import: \(recording.id)")
+        
+        // Initialize transcriber and process file
+        let transcriber = Transcriber()
+        let audioProcessor = AudioFileProcessor()
+        
+        do {
+            // Initialize transcriber
+            try await transcriber.initialize()
+            
+            // Set up transcription result handler
+            try await transcriber.startTranscription { [weak self] result in
+                Task { @MainActor in
+                    self?.addTranscriptionSegment(result)
+                }
+            }
+            
+            // Process the audio file
+            try await audioProcessor.processAudioFile(
+                url: url,
+                transcriber: transcriber,
+                recordingStartDate: recording.startDate,
+                onProgress: { [weak self] progress in
+                    // Progress updates can be handled here if needed
+                    self?.logger.info("Import progress: \(Int(progress * 100))%")
+                },
+                onComplete: { [weak self] in
+                    // File processing complete
+                    self?.logger.info("Audio file import complete")
+                }
+            )
+            
+            // Mark recording as complete
+            recording.endDate = Date()
+            try? modelContext.save()
+            
+            // Refresh to update view model
+            await refreshData()
+            
+            logger.info("Successfully imported audio file: \(url.lastPathComponent)")
+        } catch {
+            logger.error("Failed to import audio file: \(error.localizedDescription)", error: error)
+            // Clean up on error
+            if let recording = currentRecording {
+                modelContext.delete(recording)
+                try? modelContext.save()
+                currentRecording = nil
+            }
+            throw error
+        }
+    }
+
 }

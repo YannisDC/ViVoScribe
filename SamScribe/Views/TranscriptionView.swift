@@ -14,6 +14,11 @@ struct TranscriptionView: View {
     @State private var screenRecordingPermission: PermissionState = .checking
     @State private var showMicrophoneAlert = false
     @State private var showScreenRecordingAlert = false
+    
+    // File import
+    @State private var showFileImporter = false
+    @State private var isImporting = false
+    @State private var importError: String?
 
     var body: some View {
         NavigationSplitView {
@@ -37,22 +42,52 @@ struct TranscriptionView: View {
         }
         .toolbar {
             ToolbarItem(placement: .automatic) {
-                Button {
-                    if store.currentRecording != nil {
-                        stopRecording()
-                    } else {
-                        checkPermissionsAndStartRecording()
+                HStack(spacing: 12) {
+                    Button {
+                        importAudioFile()
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "square.and.arrow.down")
+                            Text("Import Audio")
+                        }
+                        .padding(.horizontal, 4)
                     }
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: store.currentRecording != nil ? "stop.circle.fill" : "waveform")
-                        Text(store.currentRecording != nil ? "Stop Transcribing" : "Start Transcribing")
+                    .buttonStyle(.bordered)
+                    .disabled(store.currentRecording != nil || isImporting)
+                    
+                    Button {
+                        if store.currentRecording != nil {
+                            stopRecording()
+                        } else {
+                            checkPermissionsAndStartRecording()
+                        }
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: store.currentRecording != nil ? "stop.circle.fill" : "waveform")
+                            Text(store.currentRecording != nil ? "Stop Transcribing" : "Start Transcribing")
+                        }
+                        .padding(.horizontal, 4)
                     }
-                    .padding(.horizontal, 4)
+                    .buttonStyle(.borderedProminent)
+                    .tint(store.currentRecording != nil ? .red : .accentColor)
+                    .disabled(microphonePermission == .checking || screenRecordingPermission == .checking)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(store.currentRecording != nil ? .red : .accentColor)
-                .disabled(microphonePermission == .checking || screenRecordingPermission == .checking)
+            }
+        }
+        .fileImporter(
+            isPresented: $showFileImporter,
+            allowedContentTypes: [.audio],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+            case .success(let urls):
+                if let url = urls.first {
+                    Task {
+                        await importAudioFile(url: url)
+                    }
+                }
+            case .failure(let error):
+                print("File import failed: \(error.localizedDescription)")
             }
         }
         .alert("Microphone Permission Required", isPresented: $showMicrophoneAlert) {
@@ -223,6 +258,28 @@ struct TranscriptionView: View {
 
         if let url = URL(string: urlString) {
             NSWorkspace.shared.open(url)
+        }
+    }
+    
+    // MARK: - Audio File Import
+    
+    private func importAudioFile() {
+        showFileImporter = true
+    }
+    
+    private func importAudioFile(url: URL) async {
+        isImporting = true
+        importError = nil
+        
+        defer {
+            isImporting = false
+        }
+        
+        do {
+            try await store.importAudioFile(url: url)
+        } catch {
+            importError = error.localizedDescription
+            print("Failed to import audio file: \(error.localizedDescription)")
         }
     }
 }

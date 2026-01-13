@@ -266,6 +266,7 @@ struct TranscriptionAudioBuffer: Sendable {
     enum AudioSource {
         case microphone
         case appAudio(processID: pid_t)
+        case fileAudio
     }
 }
 

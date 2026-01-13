@@ -19,7 +19,7 @@ actor Transcriber {
 
     // Per-source chunk accumulation buffers (16kHz from AudioInput/ApplicationAudio)
     private struct SourceKey: Hashable {
-        let source: String  // "microphone" or "appAudio-{pid}"
+        let source: String  // "microphone", "appAudio-{pid}", or "fileAudio"
 
         init(from audioSource: TranscriptionAudioBuffer.AudioSource) {
             switch audioSource {
@@ -27,6 +27,8 @@ actor Transcriber {
                 self.source = "microphone"
             case .appAudio(let processID):
                 self.source = "appAudio-\(processID)"
+            case .fileAudio:
+                self.source = "fileAudio"
             }
         }
     }
@@ -208,6 +210,37 @@ actor Transcriber {
             await processChunk(samples: chunkToProcess, startTime: chunkTime, sourceIdentifier: sourceKey.source)
         }
     }
+    
+    // Overload for file audio processing with explicit chunk start time
+    func processAudioChunk(_ transcriptionBuffer: TranscriptionAudioBuffer, chunkStartTime: Date) async throws {
+        guard isTranscribing else {
+            return
+        }
+
+        let buffer = transcriptionBuffer.buffer
+        let audioSource = transcriptionBuffer.source
+        let sourceKey = SourceKey(from: audioSource)
+
+        // Buffer is already 16kHz mono from AudioFileProcessor
+        // Extract samples directly
+        guard let channelData = buffer.floatChannelData else {
+            logger.error("No float channel data in buffer")
+            return
+        }
+
+        let frameLength = Int(buffer.frameLength)
+        let samples = Array(UnsafeBufferPointer(start: channelData[0], count: frameLength))
+
+        // For file audio, we process chunks immediately (they're already 10 seconds)
+        // Use the provided chunkStartTime for accurate timestamps
+        if samples.count >= Self.CHUNK_SAMPLES {
+            // Full chunk - process immediately
+            await processChunk(samples: samples, startTime: chunkStartTime, sourceIdentifier: sourceKey.source)
+        } else {
+            // Partial chunk (last chunk) - still process it
+            await processChunk(samples: samples, startTime: chunkStartTime, sourceIdentifier: sourceKey.source)
+        }
+    }
 
     private func processChunk(samples: [Float], startTime: Date, sourceIdentifier: String) async {
         guard let asrManager = asrManager else {
@@ -274,7 +307,15 @@ actor Transcriber {
 
             // Step 4: Create result with speaker attribution and embedding
             // Parse source type from sourceIdentifier
-            let audioSourceType: AudioSourceType = sourceIdentifier == "microphone" ? .microphone : .appAudio
+            let audioSourceType: AudioSourceType = {
+                if sourceIdentifier == "microphone" {
+                    return .microphone
+                } else if sourceIdentifier == "fileAudio" {
+                    return .fileAudio
+                } else {
+                    return .appAudio
+                }
+            }()
 
             let result = TranscriptionResult(
                 text: cleanedText,
@@ -385,6 +426,7 @@ enum FluidAudioError: Error, LocalizedError {
 enum AudioSourceType: Sendable {
     case microphone
     case appAudio
+    case fileAudio
 }
 
 struct TranscriptionResult: Sendable {

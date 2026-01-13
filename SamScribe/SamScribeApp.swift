@@ -387,6 +387,8 @@ struct TranscriptRow: View {
             return "🎤"
         case .appAudio:
             return "🔊"
+        case .fileAudio:
+            return "📁"
         }
     }
 }

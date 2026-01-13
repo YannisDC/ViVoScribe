@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8DA588792F165E23006A8FF7 /* AudioFileProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */; };
 		D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */; };
 		D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029B2F0F0DEC007C5609 /* Speaker.swift */; };
 		D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileProcessor.swift; sourceTree = "<group>"; };
 		D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpeakerSheet.swift; sourceTree = "<group>"; };
 		D81E029B2F0F0DEC007C5609 /* Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speaker.swift; sourceTree = "<group>"; };
 		D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerManager.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */,
 				D89673C62F0E5C8E00469222 /* ApplicationAudio.swift */,
 				D89673C72F0E5C8E00469222 /* AudioInput.swift */,
+				8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */,
 				D89673C82F0E5C8E00469222 /* AudioManager.swift */,
 				D89673C92F0E5C8E00469222 /* AudioMonitor.swift */,
 				D89673CA2F0E5C8E00469222 /* AudioProcess.swift */,
@@ -223,6 +226,7 @@
 				D89673DF2F0E5C8E00469222 /* RecordingDetailView.swift in Sources */,
 				D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */,
 				D89673E02F0E5C8E00469222 /* SidebarView.swift in Sources */,
+				8DA588792F165E23006A8FF7 /* AudioFileProcessor.swift in Sources */,
 				D89673E12F0E5C8E00469222 /* SamScribeApp.swift in Sources */,
 				D89673E22F0E5C8E00469222 /* RecordingControlsView.swift in Sources */,
 				D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */,
@@ -370,7 +374,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X5269R5J7K;
+				DEVELOPMENT_TEAM = 6E4D9REFSW;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -395,7 +399,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SamScribe.transcription;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ViVoScribe.transcription;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -424,7 +428,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X5269R5J7K;
+				DEVELOPMENT_TEAM = 6E4D9REFSW;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -449,7 +453,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SamScribe.transcription;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ViVoScribe.transcription;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;

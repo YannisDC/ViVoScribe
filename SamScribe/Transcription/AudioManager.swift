@@ -72,6 +72,7 @@ final class AudioManager: ObservableObject {
             let sourceIcon = switch result.audioSource {
             case .microphone: "🎤"
             case .appAudio: "🔊"
+            case .fileAudio: "📁"
             }
             print("💬 \(sourceIcon) [\(speaker)] \(result.text)")
 
