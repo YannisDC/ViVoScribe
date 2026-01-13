@@ -11,12 +11,8 @@ struct RecordingDetailView: View {
     // UI State
     @State private var fontSize: Int = 14
     @State private var showTimestamps: Bool = false
-    @State private var favoritesOnly: Bool = false
-    @State private var groupSegmentsWithoutSpeakers: Bool = false
     @State private var speakerGroupingEnabled: Bool = false
-    @State private var transcriptViewMode: TranscriptViewMode = .list
     @State private var searchText: String = ""
-    @State private var newSpeakerName: String = ""
     @State private var showQandA: Bool = false
 
     var body: some View {
@@ -102,10 +98,14 @@ struct RecordingDetailView: View {
                     }
                 }
                 
-                // Playback controls at bottom
-                if let recording = store.selectedRecording,
-                   let audioFileURL = resolvedAudioFileURL {
-                    playbackControls(recording: recording, audioFileURL: audioFileURL)
+                // Audio player at bottom
+                if let audioFileURL = resolvedAudioFileURL,
+                   let recording = store.selectedRecording {
+                    AudioMiniPlayer(
+                        viewModel: audioPlayerViewModel,
+                        audioFileURL: audioFileURL,
+                        recordingStartDate: recording.startDate
+                    )
                 }
             }
             
@@ -162,67 +162,15 @@ struct RecordingDetailView: View {
     
     private var topBar: some View {
         HStack {
-            Spacer()
-            
             Text(store.selectedRecording?.title ?? "")
                 .font(.headline)
             
             Spacer()
             
             HStack(spacing: 12) {
-                Button(action: {}) {
-                    Image(systemName: "square.and.arrow.down")
-                }
-                .buttonStyle(.plain)
-                .help("Save")
-                
-                Button(action: {}) {
-                    Image(systemName: "square.and.arrow.up")
-                }
-                .buttonStyle(.plain)
-                .help("Upload")
-                
-                Button(action: {}) {
-                    Image(systemName: "square.and.arrow.down.on.square")
-                }
-                .buttonStyle(.plain)
-                .help("Download")
-                
-                Menu {
-                    Button("Export as Text") {}
-                    Button("Export as PDF") {}
-                } label: {
-                    Image(systemName: "chevron.down")
-                }
-                .buttonStyle(.plain)
-                
                 TextField("Search in transcript", text: $searchText)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 200)
-                
-                Button(action: {}) {
-                    Image(systemName: "line.3.horizontal")
-                }
-                .buttonStyle(.plain)
-                .help("Settings")
-                
-                Button(action: {}) {
-                    Image(systemName: "plus")
-                }
-                .buttonStyle(.plain)
-                .help("Add")
-                
-                Button(action: {}) {
-                    Image(systemName: "photo")
-                }
-                .buttonStyle(.plain)
-                .help("Image")
-                
-                Button(action: {}) {
-                    Image(systemName: "info.circle")
-                }
-                .buttonStyle(.plain)
-                .help("Info")
                 
                 Button(action: { showQandA = true }) {
                     Image(systemName: "questionmark.circle")
@@ -230,12 +178,6 @@ struct RecordingDetailView: View {
                 .buttonStyle(.plain)
                 .help("Q&A")
                 .disabled(store.selectedRecording?.segments.isEmpty ?? true)
-                
-                Button(action: {}) {
-                    Image(systemName: "square.and.arrow.up")
-                }
-                .buttonStyle(.plain)
-                .help("Share")
             }
         }
         .padding(.horizontal, 16)
@@ -243,73 +185,11 @@ struct RecordingDetailView: View {
         .background(Color(.controlBackgroundColor))
     }
     
-    // MARK: - Playback Controls
-    
-    private func playbackControls(recording: RecordingViewModel, audioFileURL: URL) -> some View {
-        HStack(spacing: 12) {
-            Button(action: {
-                audioPlayerViewModel.togglePlayPause()
-            }) {
-                Image(systemName: audioPlayerViewModel.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 16))
-            }
-            .buttonStyle(.plain)
-            
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(height: 4)
-                    
-                    Rectangle()
-                        .fill(Color.accentColor)
-                        .frame(width: geometry.size.width * CGFloat(audioPlayerViewModel.duration > 0 ? audioPlayerViewModel.currentTime / audioPlayerViewModel.duration : 0), height: 4)
-                }
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            let percentage = value.location.x / geometry.size.width
-                            let newTime = TimeInterval(percentage) * audioPlayerViewModel.duration
-                            audioPlayerViewModel.seek(to: newTime)
-                        }
-                )
-            }
-            .frame(height: 20)
-            
-            Text("1x")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(Color(.controlBackgroundColor))
-        .onAppear {
-            audioPlayerViewModel.loadAudio(url: audioFileURL, recordingStartDate: recording.startDate)
-        }
-    }
     
     // MARK: - Right Sidebar
     
     private var rightSidebar: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Transcript View Options
-            HStack(spacing: 12) {
-                Button(action: { transcriptViewMode = .list }) {
-                    Image(systemName: "list.bullet")
-                        .font(.system(size: 16))
-                        .foregroundColor(transcriptViewMode == .list ? .accentColor : .secondary)
-                }
-                .buttonStyle(.plain)
-                
-                Button(action: { transcriptViewMode = .grid }) {
-                    Image(systemName: "square.grid.2x2")
-                        .font(.system(size: 16))
-                        .foregroundColor(transcriptViewMode == .grid ? .accentColor : .secondary)
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.top, 16)
-            
             // Speaker Grouping
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
@@ -327,6 +207,7 @@ struct RecordingDetailView: View {
                 Toggle("", isOn: $speakerGroupingEnabled)
                     .toggleStyle(.switch)
             }
+            .padding(.top, 16)
             
             Divider()
             
@@ -349,13 +230,6 @@ struct RecordingDetailView: View {
                                 .foregroundColor(colorForSpeaker(speaker))
                         }
                     }
-                    
-                    TextField("Add a speaker...", text: $newSpeakerName)
-                        .textFieldStyle(.roundedBorder)
-                        .onSubmit {
-                            // TODO: Add speaker creation
-                            newSpeakerName = ""
-                        }
                 }
             }
             
@@ -390,27 +264,6 @@ struct RecordingDetailView: View {
                     Toggle("", isOn: $showTimestamps)
                         .toggleStyle(.switch)
                 }
-                
-                // Favorites Only
-                HStack {
-                    Text("Favorites Only")
-                    Spacer()
-                    Toggle("", isOn: $favoritesOnly)
-                        .toggleStyle(.switch)
-                }
-                
-                // Group Segments Without Speakers
-                HStack {
-                    Text("Group Segments Without Speakers")
-                    Spacer()
-                    Toggle("", isOn: $groupSegmentsWithoutSpeakers)
-                        .toggleStyle(.switch)
-                }
-                
-                Button("Adjust Start Timestamp") {
-                    // TODO: Implement timestamp adjustment
-                }
-                .buttonStyle(.bordered)
             }
             
             Spacer()
@@ -427,14 +280,6 @@ struct RecordingDetailView: View {
         
         if !searchText.isEmpty {
             filtered = filtered.filter { $0.text.localizedCaseInsensitiveContains(searchText) }
-        }
-        
-        if favoritesOnly {
-            // TODO: Implement favorites filtering
-        }
-        
-        if groupSegmentsWithoutSpeakers {
-            // TODO: Implement grouping
         }
         
         return filtered
@@ -528,11 +373,6 @@ struct RecordingDetailView: View {
         isAccessingSecurityScopedResource = true
         return url
     }
-}
-
-enum TranscriptViewMode {
-    case list
-    case grid
 }
 
 // MARK: - Transcript Segment View
