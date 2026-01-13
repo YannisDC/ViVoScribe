@@ -346,9 +346,18 @@ final class TranscriptionsStore {
         logger.info("Importing audio file: \(url.lastPathComponent)")
         
         // Create new recording for the imported file
+        // Store the URL as a bookmark for security-scoped access
+        let bookmarkData = try? url.bookmarkData(
+            options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        )
+        let bookmarkString = bookmarkData?.base64EncodedString()
+        
         let recording = Recording(
             title: url.deletingPathExtension().lastPathComponent,
-            startDate: Date()
+            startDate: Date(),
+            audioFileURL: bookmarkString
         )
         
         modelContext.insert(recording)

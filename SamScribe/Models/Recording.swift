@@ -7,6 +7,7 @@ final class Recording {
     var title: String
     var startDate: Date
     var endDate: Date?
+    var audioFileURL: String?  // Store audio file URL as string for SwiftData compatibility
 
     // One-to-many relationship with cascade delete
     @Relationship(deleteRule: .cascade, inverse: \TranscriptionSegment.recording)
@@ -17,12 +18,14 @@ final class Recording {
         title: String,
         startDate: Date,
         endDate: Date? = nil,
+        audioFileURL: String? = nil,
         segments: [TranscriptionSegment] = []
     ) {
         self.id = id
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
+        self.audioFileURL = audioFileURL
         self.segments = segments
     }
 

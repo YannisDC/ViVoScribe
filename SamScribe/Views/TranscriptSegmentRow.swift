@@ -8,6 +8,7 @@ struct TranscriptSegmentRow: View {
     let onCancel: () -> Void
     let onDelete: () -> Void
     let onEditSpeaker: () -> Void
+    let onSeekToSegment: () -> Void
 
     @State private var editedText: String = ""
 
@@ -42,6 +43,15 @@ struct TranscriptSegmentRow: View {
                     Text(segment.timestamp.formatted(date: .omitted, time: .standard))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                    
+                    // Seek to segment button
+                    Button(action: onSeekToSegment) {
+                        Image(systemName: "play.circle")
+                            .font(.subheadline)
+                            .foregroundColor(.accentColor)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Play from segment start")
                 }
 
                 // Transcript text (editable)

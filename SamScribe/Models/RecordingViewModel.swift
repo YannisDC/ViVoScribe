@@ -7,6 +7,7 @@ struct RecordingViewModel: Identifiable, Sendable {
     let endDate: Date?
     let duration: TimeInterval
     let segmentCount: Int
+    let audioFileURL: String?
     var segments: [TranscriptionSegmentViewModel]
 
     init(from recording: Recording, includeSegments: Bool = false) {
@@ -16,6 +17,7 @@ struct RecordingViewModel: Identifiable, Sendable {
         self.endDate = recording.endDate
         self.duration = recording.duration
         self.segmentCount = recording.segmentCount
+        self.audioFileURL = recording.audioFileURL
 
         if includeSegments {
             self.segments = recording.segments
