@@ -9,7 +9,7 @@ struct RecordingDetailView: View {
     @State private var isAccessingSecurityScopedResource = false
     
     // UI State
-    @State private var fontSize: Int = 12
+    @State private var fontSize: Int = 14
     @State private var showTimestamps: Bool = false
     @State private var favoritesOnly: Bool = false
     @State private var groupSegmentsWithoutSpeakers: Bool = false
@@ -477,9 +477,18 @@ struct TranscriptSegmentView: View {
             }
             
             if showTimestamps {
-                Text(segment.timestamp.formatted(date: .omitted, time: .standard))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                let endTimestamp = segment.timestamp.addingTimeInterval(segment.endTime - segment.startTime)
+                HStack(spacing: 4) {
+                    Text(segment.timestamp.formatted(date: .omitted, time: .standard))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("–")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(endTimestamp.formatted(date: .omitted, time: .standard))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             
             if isEditing {

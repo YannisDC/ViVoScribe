@@ -26,29 +26,46 @@ struct TranscriptionView: View {
         NavigationSplitView {
             SidebarView(store: store, selectedSection: $selectedSection)
         } detail: {
-            if let recording = store.selectedRecording {
-                RecordingDetailView(store: store)
-                    .navigationTitle(recording.title)
-                    .toolbar {
-                        ToolbarItem(placement: .automatic) {
-                            Button {
-                                store.clearSelectedRecording()
-                            } label: {
-                                HStack {
-                                    Image(systemName: "chevron.left")
-                                    Text("Back")
+            switch selectedSection {
+            case .home:
+                HomeView(store: store)
+                    .navigationTitle("Home")
+            case .transcriptions:
+                if let recording = store.selectedRecording {
+                    RecordingDetailView(store: store)
+                        .navigationTitle(recording.title)
+                        .toolbar {
+                            ToolbarItem(placement: .automatic) {
+                                Button {
+                                    store.clearSelectedRecording()
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "chevron.left")
+                                        Text("Back")
+                                    }
                                 }
                             }
                         }
-                    }
-            } else {
-                switch selectedSection {
-                case .transcriptions:
+                } else {
                     TranscriptionsListView(store: store)
-                case .home:
-                    HomeView(store: store)
-                        .navigationTitle("Home")
-                default:
+                }
+            default:
+                if let recording = store.selectedRecording {
+                    RecordingDetailView(store: store)
+                        .navigationTitle(recording.title)
+                        .toolbar {
+                            ToolbarItem(placement: .automatic) {
+                                Button {
+                                    store.clearSelectedRecording()
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "chevron.left")
+                                        Text("Back")
+                                    }
+                                }
+                            }
+                        }
+                } else {
                     HomeView(store: store)
                         .navigationTitle("Home")
                 }
