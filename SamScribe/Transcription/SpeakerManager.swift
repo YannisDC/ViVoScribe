@@ -43,10 +43,12 @@ final class SpeakerManager {
 
         var bestSpeaker: Speaker?
         var minDistance = Float.infinity
+        var allDistances: [(Speaker, Float)] = []
 
         for candidate in candidates {
             // Use FluidAudio's cosineDistance (optimized with vDSP)
             let distance = SpeakerUtilities.cosineDistance(embedding, candidate.getEmbedding())
+            allDistances.append((candidate, distance))
 
             if distance < minDistance {
                 minDistance = distance
@@ -54,13 +56,23 @@ final class SpeakerManager {
             }
         }
 
-        // Check against FluidAudio's recommended threshold (0.65 for macOS)
-        if minDistance < config.maxDistanceForAssignment {
-            logger.info("Matched speaker with distance: \(minDistance)")
+        // Log all distances for debugging
+        let distancesString = allDistances
+            .sorted { $0.1 < $1.1 }
+            .map { "Speaker \($0.0.speakerNumber): \(String(format: "%.4f", $0.1))" }
+            .joined(separator: ", ")
+        logger.info("🔍 Speaker matching distances: [\(distancesString)]")
+
+        // Use a stricter threshold (0.55 instead of 0.65) to reduce false matches
+        // The default 0.65 can be too permissive when distinguishing between similar voices
+        let strictThreshold: Float = 0.55
+        
+        if minDistance < strictThreshold {
+            logger.info("✅ Matched to \(bestSpeaker?.displayName ?? "unknown") with distance: \(String(format: "%.4f", minDistance)) (threshold: \(strictThreshold))")
             return bestSpeaker
         }
 
-        logger.info("No match found (min distance: \(minDistance) > threshold: \(config.maxDistanceForAssignment))")
+        logger.info("❌ No match found (min distance: \(String(format: "%.4f", minDistance)) > strict threshold: \(strictThreshold), default threshold: \(config.maxDistanceForAssignment))")
         return nil
     }
 
@@ -76,7 +88,7 @@ final class SpeakerManager {
         modelContext.insert(speaker)
         try? modelContext.save()
 
-        logger.info("Created new speaker: Speaker \(nextNumber)")
+        logger.info("🆕 Created new speaker: Speaker \(nextNumber) (total speakers: \(speakers.count + 1))")
         return speaker
     }
 

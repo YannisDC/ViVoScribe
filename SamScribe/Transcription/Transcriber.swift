@@ -287,6 +287,15 @@ actor Transcriber {
                     )
 
                     // Step 3: Find speaker who spoke longest
+                    // Log all detected speakers for debugging
+                    let allSpeakers = diarizationResult.segments.map { segment in
+                        let duration = segment.endTimeSeconds - segment.startTimeSeconds
+                        return "Speaker \(segment.speakerId): \(String(format: "%.1f", duration))s"
+                    }
+                    if !allSpeakers.isEmpty {
+                        logger.info("🔊 [\(sourceIdentifier)] Detected \(diarizationResult.segments.count) speaker segment(s): \(allSpeakers.joined(separator: ", "))")
+                    }
+                    
                     if let longestSegment = findLongestSpeaker(from: diarizationResult) {
                         speakerID = longestSegment.speakerId
                         speakerLabel = "Speaker \(longestSegment.speakerId)"
