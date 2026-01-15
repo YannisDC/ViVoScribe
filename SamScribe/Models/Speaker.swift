@@ -9,6 +9,7 @@ final class Speaker {
     var speakerNumber: Int   // Auto-assigned
     var embeddingData: Data 
     var colorHex: String?   // User-selected color (hex string, optional)
+    var imageData: Data?   // User-selected image (optional)
     var createdAt: Date
     var updatedAt: Date
 
@@ -28,6 +29,7 @@ final class Speaker {
         embeddingData: Data,
         customName: String? = nil,
         colorHex: String? = nil,
+        imageData: Data? = nil,
         createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
@@ -36,6 +38,7 @@ final class Speaker {
         self.embeddingData = embeddingData
         self.customName = customName
         self.colorHex = colorHex
+        self.imageData = imageData
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.segments = []

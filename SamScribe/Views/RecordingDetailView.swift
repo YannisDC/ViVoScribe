@@ -116,8 +116,8 @@ struct RecordingDetailView: View {
         .sheet(item: $editingSpeaker) { speaker in
             EditSpeakerSheet(
                 speaker: speaker,
-                onSave: { newName, colorHex in
-                    store.updateSpeaker(speaker, newName: newName, colorHex: colorHex)
+                onSave: { newName, colorHex, imageData in
+                    store.updateSpeaker(speaker, newName: newName, colorHex: colorHex, imageData: imageData)
                     editingSpeaker = nil
                 },
                 onCancel: { editingSpeaker = nil },
@@ -220,11 +220,13 @@ struct RecordingDetailView: View {
                 if let recording = store.selectedRecording {
                     let speakers = getUniqueSpeakers(from: recording.segments)
                     ForEach(Array(speakers.enumerated()), id: \.element.id) { index, speaker in
-                        HStack {
+                        HStack(spacing: 8) {
                             Text("\(index + 1)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .frame(width: 20)
+                            
+                            SpeakerAvatarView(speaker: speaker, size: 24)
                             
                             Text(speaker.displayName)
                                 .font(.subheadline)
@@ -403,6 +405,9 @@ struct TranscriptSegmentView: View {
         VStack(alignment: .leading, spacing: 4) {
             // Speaker name, timestamp, and play button in one row
             HStack(spacing: 8) {
+                // Speaker avatar
+                SpeakerAvatarView(speaker: segment.speaker, size: CGFloat(fontSize) + 4)
+                
                 if let speaker = segment.speaker {
                     Button(action: onEditSpeaker) {
                         Text(speaker.displayName)
@@ -550,6 +555,9 @@ struct TranscriptBlockView: View {
         VStack(alignment: .leading, spacing: 4) {
             // Speaker name, timestamp, and play button in one row
             HStack(spacing: 8) {
+                // Speaker avatar
+                SpeakerAvatarView(speaker: block.speaker, size: CGFloat(fontSize) + 4)
+                
                 if let speaker = block.speaker {
                     Button(action: onEditSpeaker) {
                         Text(speaker.displayName)

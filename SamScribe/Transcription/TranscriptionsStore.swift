@@ -352,11 +352,29 @@ final class TranscriptionsStore {
         }
     }
     
-    // NEW: Speaker rename and color update method
-    func updateSpeaker(_ speaker: Speaker, newName: String, colorHex: String?) {
+    // NEW: Speaker image update method
+    func updateSpeakerImage(_ speaker: Speaker, imageData: Data?) {
+        guard let context = modelContext else { return }
+        
+        do {
+            speaker.imageData = imageData
+            speaker.updatedAt = Date()
+            try context.save()
+            logger.info("Updated speaker image: \(speaker.id)")
+            
+            // Refresh selected recording to show updated images
+            refreshSelectedRecording()
+        } catch {
+            logger.error("Failed to update speaker image: \(error.localizedDescription)", error: error)
+        }
+    }
+    
+    // NEW: Speaker rename, color, and image update method
+    func updateSpeaker(_ speaker: Speaker, newName: String, colorHex: String?, imageData: Data?) {
         guard let speakerManager = speakerManager else { return }
         speakerManager.renameSpeaker(speaker, newName: newName)
         updateSpeakerColor(speaker, colorHex: colorHex)
+        updateSpeakerImage(speaker, imageData: imageData)
     }
     
     // NEW: Speaker delete method

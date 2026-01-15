@@ -17,6 +17,9 @@ struct TranscriptSegmentRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 // Metadata
                 HStack(spacing: 8) {
+                    // Speaker avatar
+                    SpeakerAvatarView(speaker: segment.speaker, size: 24)
+                    
                     if let speakerLabel = segment.speakerLabel {
                         // Has speaker - show with edit button
                         Button(action: onEditSpeaker) {

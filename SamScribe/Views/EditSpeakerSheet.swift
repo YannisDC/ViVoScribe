@@ -1,15 +1,18 @@
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 
 struct EditSpeakerSheet: View {
     let speaker: Speaker
-    let onSave: (String, String?) -> Void
+    let onSave: (String, String?, Data?) -> Void
     let onCancel: () -> Void
     let onDelete: (() -> Void)?
 
     @State private var newName: String
     @State private var selectedColor: Color
+    @State private var selectedImageData: Data?
     @State private var showDeleteConfirmation = false
+    @State private var showImagePicker = false
     @FocusState private var isNameFieldFocused: Bool
     
     // Predefined color palette
@@ -18,12 +21,13 @@ struct EditSpeakerSheet: View {
         .cyan, .mint, .indigo, .yellow, .teal, .brown
     ]
 
-    init(speaker: Speaker, onSave: @escaping (String, String?) -> Void, onCancel: @escaping () -> Void, onDelete: (() -> Void)? = nil) {
+    init(speaker: Speaker, onSave: @escaping (String, String?, Data?) -> Void, onCancel: @escaping () -> Void, onDelete: (() -> Void)? = nil) {
         self.speaker = speaker
         self.onSave = onSave
         self.onCancel = onCancel
         self.onDelete = onDelete
         _newName = State(initialValue: speaker.customName ?? "")
+        _selectedImageData = State(initialValue: speaker.imageData)
         
         // Initialize color from stored hex or use default
         if let hex = speaker.colorHex, let color = Color(hex: hex) {
@@ -60,6 +64,54 @@ struct EditSpeakerSheet: View {
                     Text("Leave blank to use default name")
                         .font(.caption2)
                         .foregroundColor(.secondary)
+                }
+                
+                Divider()
+                
+                // Image section
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Image")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    HStack(spacing: 12) {
+                        // Display current image or placeholder
+                        if let imageData = selectedImageData, let nsImage = NSImage(data: imageData) {
+                            Image(nsImage: nsImage)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 64, height: 64)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.primary.opacity(0.2), lineWidth: 1)
+                                )
+                        } else {
+                            Circle()
+                                .fill(Color.secondary.opacity(0.2))
+                                .frame(width: 64, height: 64)
+                                .overlay(
+                                    Image(systemName: "person.circle.fill")
+                                        .font(.system(size: 32))
+                                        .foregroundColor(.secondary)
+                                )
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Button("Choose Image...") {
+                                showImagePicker = true
+                            }
+                            .buttonStyle(.bordered)
+                            
+                            if selectedImageData != nil {
+                                Button("Remove Image") {
+                                    selectedImageData = nil
+                                }
+                                .buttonStyle(.bordered)
+                                .foregroundColor(.red)
+                            }
+                        }
+                    }
                 }
                 
                 Divider()
@@ -126,6 +178,32 @@ struct EditSpeakerSheet: View {
         .padding()
         .frame(width: 360)
         .onAppear { isNameFieldFocused = true }
+        .fileImporter(
+            isPresented: $showImagePicker,
+            allowedContentTypes: [.image],
+            allowsMultipleSelection: false
+        ) { result in
+            if case .success(let urls) = result, let url = urls.first {
+                // Load image data
+                if let imageData = try? Data(contentsOf: url) {
+                    // Resize image to reasonable size (max 512x512) to save storage
+                    if let nsImage = NSImage(data: imageData) {
+                        let resizedImage = resizeImage(nsImage, maxDimension: 512)
+                        // Convert to PNG for better compression
+                        if let resized = resizedImage,
+                           let tiffData = resized.tiffRepresentation,
+                           let bitmapRep = NSBitmapImageRep(data: tiffData),
+                           let pngData = bitmapRep.representation(using: .png, properties: [:]) {
+                            selectedImageData = pngData
+                        } else {
+                            selectedImageData = imageData
+                        }
+                    } else {
+                        selectedImageData = imageData
+                    }
+                }
+            }
+        }
         .alert("Delete Speaker", isPresented: $showDeleteConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -138,7 +216,29 @@ struct EditSpeakerSheet: View {
     
     private func save() {
         let colorHex = selectedColor.toHex()
-        onSave(newName, colorHex)
+        onSave(newName, colorHex, selectedImageData)
+    }
+    
+    private func resizeImage(_ image: NSImage, maxDimension: CGFloat) -> NSImage? {
+        let size = image.size
+        let aspectRatio = size.width / size.height
+        var newSize: NSSize
+        
+        if size.width > size.height {
+            newSize = NSSize(width: maxDimension, height: maxDimension / aspectRatio)
+        } else {
+            newSize = NSSize(width: maxDimension * aspectRatio, height: maxDimension)
+        }
+        
+        let resizedImage = NSImage(size: newSize)
+        resizedImage.lockFocus()
+        image.draw(in: NSRect(origin: .zero, size: newSize),
+                   from: NSRect(origin: .zero, size: size),
+                   operation: .sourceOver,
+                   fraction: 1.0)
+        resizedImage.unlockFocus()
+        
+        return resizedImage
     }
 }
 

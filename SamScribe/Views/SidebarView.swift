@@ -62,15 +62,8 @@ struct SidebarView: View {
                 Section("People") {
                     ForEach(speakers) { speaker in
                         HStack(spacing: 8) {
-                            // Speaker initial circle
-                            Circle()
-                                .fill(colorForSpeaker(speaker))
-                                .frame(width: 24, height: 24)
-                                .overlay(
-                                    Text(initialsForSpeaker(speaker))
-                                        .font(.system(size: 10, weight: .semibold))
-                                        .foregroundColor(.white)
-                                )
+                            // Speaker avatar
+                            SpeakerAvatarView(speaker: speaker, size: 24)
                             
                             Text(speaker.displayName)
                                 .font(.subheadline)

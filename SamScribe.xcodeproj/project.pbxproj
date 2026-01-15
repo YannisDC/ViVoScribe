@@ -13,10 +13,10 @@
 		8D8B09F82F16E7120005E458 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09F72F16E7120005E458 /* MLXLLM */; };
 		8D8B09FA2F16E7120005E458 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09F92F16E7120005E458 /* MLXLMCommon */; };
 		8D8B09FC2F16E7120005E458 /* MLXVLM in Frameworks */ = {isa = PBXBuildFile; productRef = 8D8B09FB2F16E7120005E458 /* MLXVLM */; };
-		8D8B0A012F16EFF90005E458 /* YouTubeDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B0A002F16EFF90005E458 /* YouTubeDownloader.swift */; };
 		8DA588792F165E23006A8FF7 /* AudioFileProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */; };
 		8DA5887B2F168BE0006A8FF7 /* TranscriptionBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */; };
 		8DA5887E2F1692D8006A8FF7 /* QandAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5887D2F1692D8006A8FF7 /* QandAView.swift */; };
+		8DA99D732F18F8DD007A15BF /* SpeakerAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA99D722F18F8DD007A15BF /* SpeakerAvatarView.swift */; };
 		D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */; };
 		D81E029C2F0F0DEC007C5609 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029B2F0F0DEC007C5609 /* Speaker.swift */; };
 		D81E029E2F0F0E03007C5609 /* SpeakerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */; };
@@ -46,10 +46,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8D8B0A002F16EFF90005E458 /* YouTubeDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeDownloader.swift; sourceTree = "<group>"; };
 		8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileProcessor.swift; sourceTree = "<group>"; };
 		8DA5887A2F168BE0006A8FF7 /* TranscriptionBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionBlock.swift; sourceTree = "<group>"; };
 		8DA5887D2F1692D8006A8FF7 /* QandAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QandAView.swift; sourceTree = "<group>"; };
+		8DA99D722F18F8DD007A15BF /* SpeakerAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerAvatarView.swift; sourceTree = "<group>"; };
 		D81E02992F0F0DDD007C5609 /* EditSpeakerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpeakerSheet.swift; sourceTree = "<group>"; };
 		D81E029B2F0F0DEC007C5609 /* Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speaker.swift; sourceTree = "<group>"; };
 		D81E029D2F0F0E03007C5609 /* SpeakerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerManager.swift; sourceTree = "<group>"; };
@@ -118,7 +118,6 @@
 				D89673C62F0E5C8E00469222 /* ApplicationAudio.swift */,
 				D89673C72F0E5C8E00469222 /* AudioInput.swift */,
 				8DA588782F165E23006A8FF7 /* AudioFileProcessor.swift */,
-				8D8B0A002F16EFF90005E458 /* YouTubeDownloader.swift */,
 				D89673C82F0E5C8E00469222 /* AudioManager.swift */,
 				D89673C92F0E5C8E00469222 /* AudioMonitor.swift */,
 				D89673CA2F0E5C8E00469222 /* AudioProcess.swift */,
@@ -136,6 +135,7 @@
 				D89673EF2F0E5C8E00469223 /* AudioMiniPlayer.swift */,
 				D89673CE2F0E5C8E00469222 /* RecordingControlsView.swift */,
 				8DA5887D2F1692D8006A8FF7 /* QandAView.swift */,
+				8DA99D722F18F8DD007A15BF /* SpeakerAvatarView.swift */,
 				D89673CF2F0E5C8E00469222 /* RecordingDetailView.swift */,
 				D89673F22F0E5C8E00469224 /* HomeView.swift */,
 				D89673D02F0E5C8E00469222 /* SidebarView.swift */,
@@ -224,7 +224,6 @@
 			packageReferences = (
 				8D8B09EF2F16E6F00005E458 /* XCRemoteSwiftPackageReference "FluidAudio" */,
 				8D8B09F42F16E7120005E458 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
-				8D8B0A022F16F1DE0005E458 /* XCRemoteSwiftPackageReference "YouTubeKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D89DC33B2F03138E00F5628B;
@@ -256,10 +255,10 @@
 				D89673DB2F0E5C8E00469222 /* AudioMonitor.swift in Sources */,
 				D81E029A2F0F0DDD007C5609 /* EditSpeakerSheet.swift in Sources */,
 				D89673DC2F0E5C8E00469222 /* AudioProcess.swift in Sources */,
-				8D8B0A012F16EFF90005E458 /* YouTubeDownloader.swift in Sources */,
 				D89673DD2F0E5C8E00469222 /* TranscriptionView.swift in Sources */,
 				D89673DE2F0E5C8E00469222 /* TranscriptionSegmentViewModel.swift in Sources */,
 				D89673DF2F0E5C8E00469222 /* RecordingDetailView.swift in Sources */,
+				8DA99D732F18F8DD007A15BF /* SpeakerAvatarView.swift in Sources */,
 				D89673F02F0E5C8E00469223 /* AudioMiniPlayer.swift in Sources */,
 				D89673F12F0E5C8E00469224 /* HomeView.swift in Sources */,
 				D89673F32F0E5C8E00469225 /* TranscriptionsListView.swift in Sources */,
@@ -551,14 +550,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.29.3;
-			};
-		};
-		8D8B0A022F16F1DE0005E458 /* XCRemoteSwiftPackageReference "YouTubeKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/alexeichhorn/YouTubeKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
